@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<parameters>
+  <parameter>
+    <description>Unique node name for the install (a name not a FQDN)</description>
+    <name>@@NODE@@</name>
+    <value>node</value>
+    <regEx>[a-zA-Z0-9-_]+</regEx>
+  </parameter>
+  <parameter>
+    <description>HTTP prefix to use</description>
+    <name>@@PORT_PREFIX@@</name>
+    <value>90</value>
+    <regEx>[0-9]{2}</regEx>
+  </parameter>
+  <parameter>
+    <description>Stroom Proxy Repository Dir</description>
+    <name>@@REPO_DIR@@</name>
+    <value>/stroomdata/stroom-proxy</value>
+  </parameter>
+  <parameter>
+    <description>Optional tomcat JVM settings</description>
+    <name>@@JAVA_OPTS@@</name>
+    <value>-Xms512m -Xmx1g</value>
+  </parameter>
+</parameters>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+  <bean name="remoteFeedServiceRPC" class="org.springframework.remoting.caucho.HessianServiceExporter">
+    <property name="service" ref="remoteFeedService" />
+    <property name="serviceInterface" value="stroom.proxy.feed.remote.RemoteFeedService" />
+  </bean>
+  <bean name="remoteStatusServiceRPC" class="org.springframework.remoting.caucho.HessianServiceExporter">
+    <property name="service" ref="remoteStatusService" />
+    <property name="serviceInterface" value="stroom.proxy.status.remote.RemoteStatusService" />
+  </bean>
+</beans>
