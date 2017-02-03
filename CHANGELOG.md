@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Issue **#109** : Added packetSize="65536" property to AJP connector in server.xml template.
+
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
