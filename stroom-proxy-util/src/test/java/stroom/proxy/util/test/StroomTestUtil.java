@@ -1,14 +1,14 @@
 package stroom.proxy.util.test;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-
 import org.apache.commons.io.FileUtils;
-
 import stroom.proxy.util.io.FileUtil;
 import stroom.proxy.util.thread.ThreadUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class StroomTestUtil {
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSS");
@@ -56,7 +56,7 @@ public class StroomTestUtil {
 
         File dir = null;
         for (int i = 0; i < 100; i++) {
-            dir = new File(parentDir, FORMAT.format(Instant.now()));
+            dir = new File(parentDir, FORMAT.format(ZonedDateTime.now(ZoneOffset.UTC)));
             if (dir.mkdir()) {
                 break;
             } else {
