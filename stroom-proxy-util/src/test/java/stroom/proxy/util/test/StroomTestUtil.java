@@ -2,18 +2,16 @@ package stroom.proxy.util.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.io.FileUtils;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import stroom.proxy.util.io.FileUtil;
 import stroom.proxy.util.thread.ThreadUtil;
 
 public class StroomTestUtil {
-    private static final DateTimeFormatter FORMAT = DateTimeFormat.forPattern("yyyyMMdd_HHmmss_SSS")
-            .withZone(DateTimeZone.UTC);
+    private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSS");
 
     public static File createRootTestDir(final File tempDir) throws IOException {
         return tempDir;
@@ -58,7 +56,7 @@ public class StroomTestUtil {
 
         File dir = null;
         for (int i = 0; i < 100; i++) {
-            dir = new File(parentDir, FORMAT.print(System.currentTimeMillis()));
+            dir = new File(parentDir, FORMAT.format(Instant.now()));
             if (dir.mkdir()) {
                 break;
             } else {
