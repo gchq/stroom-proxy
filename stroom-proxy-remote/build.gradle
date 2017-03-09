@@ -2,12 +2,4 @@ dependencies {
     compile project(':stroom-proxy-util')
 
     compile 'com.caucho:hessian:4.0.38'
-//    compile 'org.springframework:spring-context:4.2.4.RELEASE'
-//    compile 'org.springframework:spring-core:4.2.4.RELEASE'
-//    compile 'org.springframework:spring-beans:4.2.4.RELEASE'
-//    compile 'org.springframework:spring-test:4.2.4.RELEASE'
-//    compile 'org.springframework:spring-aop:4.2.4.RELEASE'
-//    compile 'org.springframework:spring-web:4.2.4.RELEASE'
-//    compile 'org.springframework:spring-webmvc:4.2.4.RELEASE'
-//    compile 'commons-lang:commons-lang:2.6'
 }
