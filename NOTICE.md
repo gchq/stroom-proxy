@@ -16,7 +16,6 @@ The table below includes licences for all Maven dependencies.
 | commons-io                                | commons-io                                   | 2.5              | APL 2.0       |         |               |
 | commons-lang                              | commons-lang                                 | 2.6              | APL 2.0       |         |               |
 | javax.servlet                             | servlet-api                                  | 2.5              | CDDL1.0       |         |               |
-| joda-time                                 | joda-time                                    | 2.3              | APL 2.0       |         |               |
 | log4j                                     | log4j                                        | 1.2.17           | APL 2.0       |         |               |
 | mysql                                     | mysql-connector-java                         | 5.1.40           | GPL\*         |         |               |
 | net.sf.ehcache                            | ehcache-core                                 | 2.6.11           | APL 2.0       |         |               |

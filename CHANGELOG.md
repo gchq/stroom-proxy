@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Issue **#109** : Added packetSize="65536" property to AJP connector in server.xml template.
+
+* Issue **#6** : Removed JODA Time library and replaced with Java 7 Time API.
+
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
