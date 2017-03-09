@@ -1,22 +1,20 @@
 package stroom.proxy.handler.db;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.annotation.Resource;
-import javax.sql.DataSource;
-
 import com.googlecode.ehcache.annotations.Cacheable;
 import com.googlecode.ehcache.annotations.KeyGenerator;
-
 import stroom.proxy.feed.remote.FeedStatus;
 import stroom.proxy.feed.remote.GetFeedStatusRequest;
 import stroom.proxy.feed.remote.GetFeedStatusResponse;
 import stroom.proxy.handler.LocalFeedService;
 import stroom.proxy.util.cert.CertificateUtil;
 import stroom.proxy.util.logging.StroomLogger;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DataBaseFeedQueryCacheable implements LocalFeedService {
     private final static StroomLogger LOGGER = StroomLogger.getLogger(DataBaseFeedQueryCacheable.class);
@@ -41,7 +39,7 @@ public class DataBaseFeedQueryCacheable implements LocalFeedService {
     }
 
     @Cacheable(cacheName = "dataBaseCache", keyGenerator = @KeyGenerator(name = "ListCacheKeyGenerator") )
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING")
+    @SuppressWarnings("SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING")
     public GetFeedStatusResponse getFeedStatus(GetFeedStatusRequest request) {
         GetFeedStatusResponse response = new GetFeedStatusResponse();
         response.setStatus(FeedStatus.Receive);

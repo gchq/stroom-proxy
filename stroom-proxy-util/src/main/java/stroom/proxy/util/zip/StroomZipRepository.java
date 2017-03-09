@@ -4,14 +4,17 @@ import stroom.proxy.util.date.DateUtil;
 import stroom.proxy.util.io.FileSystemIterator;
 import stroom.proxy.util.io.FileUtil;
 import stroom.proxy.util.logging.StroomLogger;
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
@@ -297,7 +300,7 @@ public class StroomZipRepository {
         }
     }
 
-    @SuppressWarnings(value = "DM_DEFAULT_ENCODING", justification = "PrintWriter does not take a charset and this is only an error message")
+    @SuppressWarnings(value = "DM_DEFAULT_ENCODING")
     public void addErrorMessage(final StroomZipFile zipFile, final String msg, final boolean bad) {
         try {
             File errorFile = getErrorFile(zipFile);

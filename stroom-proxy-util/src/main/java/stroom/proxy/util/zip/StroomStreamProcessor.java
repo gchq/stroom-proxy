@@ -1,5 +1,20 @@
 package stroom.proxy.util.zip;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.springframework.util.StringUtils;
+import stroom.proxy.util.cert.CertificateUtil;
+import stroom.proxy.util.date.DateUtil;
+import stroom.proxy.util.io.ByteCountInputStream;
+import stroom.proxy.util.io.CloseableUtil;
+import stroom.proxy.util.io.InitialByteArrayOutputStream;
+import stroom.proxy.util.io.InitialByteArrayOutputStream.BufferPos;
+import stroom.proxy.util.io.StreamProgressMonitor;
+import stroom.proxy.util.io.StreamUtil;
+import stroom.proxy.util.logging.StroomLogger;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,24 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.springframework.util.StringUtils;
-
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
-import stroom.proxy.util.cert.CertificateUtil;
-import stroom.proxy.util.date.DateUtil;
-import stroom.proxy.util.io.ByteCountInputStream;
-import stroom.proxy.util.io.CloseableUtil;
-import stroom.proxy.util.io.InitialByteArrayOutputStream;
-import stroom.proxy.util.io.InitialByteArrayOutputStream.BufferPos;
-import stroom.proxy.util.io.StreamProgressMonitor;
-import stroom.proxy.util.io.StreamUtil;
-import stroom.proxy.util.logging.StroomLogger;
 
 public class StroomStreamProcessor {
     private static StroomLogger LOGGER = StroomLogger.getLogger(StroomStreamProcessor.class);

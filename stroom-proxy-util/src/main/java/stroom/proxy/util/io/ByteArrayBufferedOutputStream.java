@@ -3,8 +3,6 @@ package stroom.proxy.util.io;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
-
 /**
  * Buffered stream that lets you pass in the buffer.
  */

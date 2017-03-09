@@ -1,8 +1,10 @@
 package stroom.proxy.util.scheduler;
 
-import java.util.*;
-
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Class to figure out the next time we should fire based on a simple CRON
@@ -241,7 +243,7 @@ public class SimpleCron {
         /**
          * Build the CRON matches
          */
-        @SuppressWarnings(value = "PZLA_PREFER_ZERO_LENGTH_ARRAYS", justification = "private array ... designed to allow null")
+        @SuppressWarnings(value = "PZLA_PREFER_ZERO_LENGTH_ARRAYS")
         private int[] buildMatches(final String expression) {
             int[] matches = null;
 

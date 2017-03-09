@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
-
 /**
  * An output stream buffer that tries to use a given buffer first and once that
  * is not big enough it delegates all calls to a real ByteArrayOutputStream.

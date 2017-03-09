@@ -1,13 +1,12 @@
 package stroom.proxy.util.task;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
-
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import stroom.proxy.util.logging.LoggerUtil;
 import stroom.proxy.util.shared.Monitor;
 import stroom.proxy.util.shared.TerminateHandler;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MonitorImpl implements Monitor {
     private static final long serialVersionUID = 6158410874438193810L;
@@ -21,7 +20,7 @@ public class MonitorImpl implements Monitor {
 
     private final ReentrantLock terminateHandlersLock = new ReentrantLock();
 
-    @SuppressWarnings(value = "VO_VOLATILE_REFERENCE_TO_ARRAY", justification = "Private array that we don't change")
+    @SuppressWarnings(value = "VO_VOLATILE_REFERENCE_TO_ARRAY")
     private volatile Object[] info;
 
     public MonitorImpl() {

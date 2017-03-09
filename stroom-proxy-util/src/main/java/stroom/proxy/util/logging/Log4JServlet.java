@@ -1,15 +1,5 @@
 package stroom.proxy.util.logging;
 
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-
 import org.apache.log4j.Appender;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -17,12 +7,19 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ResourceUtils;
-
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import stroom.proxy.util.config.StroomProperties;
-import stroom.proxy.util.spring.StroomResourceLoaderUtil;
 import stroom.proxy.util.spring.Log4jWebConfigurer;
+import stroom.proxy.util.spring.StroomResourceLoaderUtil;
 import stroom.proxy.util.web.ServletContextUtil;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * start / stop / refresh Log4J configuration
