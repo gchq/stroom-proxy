@@ -95,7 +95,7 @@ public class ProxyProperties {
         propertyDescriptionMap.put(ZIP_FILENAME_TEMPLATE,
                                    "A template for naming the zip files in the repository where files will be named " +
                                    "nnn!zipFilenameTemplate.zip where nnn is the id prefix, ! is the configurable delimiter and " +
-                                   "zipFilenameTemplate will be something like '${feed}!${headerMapKey1}!${headerMapKey2}'. The naem of " +
+                                   "zipFilenameTemplate will be something like '${feed}!${headerMapKey1}!${headerMapKey2}'. The name of " +
                                    "each variable must exactly match a key in the meta data else it will resolve to ''.");
 
         propertyDescriptionMap.put(MAX_FILE_SCAN,
