@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#8** : Fixed issue where `*.zip.bad` files were being picked up for proxy aggregation. Also it appears that old lock files would not have been cleared if a template pattern for file output was being used so this has also been altered.
 
+* Issue **#6** : Removed JODA Time library and replaced with Java 7 Time API.
+
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
