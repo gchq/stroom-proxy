@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#9** : File permissions in distribution have now been changed to `0750` for directories and shell scripts and `0640` for all other files.
 
+* Issue **#8** : Fixed issue where `*.zip.bad` files were being picked up for proxy aggregation. Also it appears that old lock files would not have been cleared if a template pattern for file output was being used so this has also been altered.
+
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 

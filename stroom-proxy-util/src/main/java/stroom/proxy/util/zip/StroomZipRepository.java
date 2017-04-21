@@ -1,19 +1,41 @@
+/*
+ * Copyright 2017 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package stroom.proxy.util.zip;
 
 import stroom.proxy.util.date.DateUtil;
 import stroom.proxy.util.io.FileSystemIterator;
 import stroom.proxy.util.io.FileUtil;
 import stroom.proxy.util.logging.StroomLogger;
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -34,11 +56,9 @@ public class StroomZipRepository {
     public final static int MAX_FILENAME_LENGTH = 255;
 
     private final static StroomLogger LOGGER = StroomLogger.getLogger(StroomZipRepository.class);
-    private final static Pattern ZIP_PATTERN = Pattern.compile(".*\\.zip");
-    private final static Pattern ZIP_EXTENSION_PATTERN = Pattern.compile("\\.zip(\\.lock)?$");
+    private final static Pattern ZIP_PATTERN = Pattern.compile(".*\\.zip$");
+    private final static Pattern BASE_FILENAME_PATTERN = Pattern.compile("^(\\d{3})+$");
 
-    //TODO the regex is a bit simple as the non-id part could include numbers as well so
-    private final static Pattern BASE_FILENAME_PATTERN = Pattern.compile("(\\d{3})+.*");
     /**
      * Date the repository was created
      */
@@ -71,8 +91,8 @@ public class StroomZipRepository {
         this.lockDeleteAgeMs = lockDeleteAgeMs;
         if (!isDelimiterValid(zipFilenameDelimiter)){
             LOGGER.error("zipFilenameDelimiter property [%s] is invalid, using the default [%s] instead",
-                         zipFilenameDelimiter,
-                         DEFAULT_ZIP_FILENAME_DELIMITER);
+                    zipFilenameDelimiter,
+                    DEFAULT_ZIP_FILENAME_DELIMITER);
             this.zipFilenameDelimiter = DEFAULT_ZIP_FILENAME_DELIMITER;
         } else {
             this.zipFilenameDelimiter = zipFilenameDelimiter == null ? DEFAULT_ZIP_FILENAME_DELIMITER : zipFilenameDelimiter;
@@ -97,7 +117,7 @@ public class StroomZipRepository {
 
         // Create the root directory
         if (!baseLockDir.isDirectory() && !baseLockDir.mkdirs()) {
-            throw new RuntimeException("Unable to create dircetory " + baseLockDir);
+            throw new RuntimeException("Unable to create directory " + baseLockDir);
         }
 
         // We may be an existing repository so check for the last ID.
@@ -149,7 +169,7 @@ public class StroomZipRepository {
     private Long scanForMatch(final File dir, final boolean last) {
         final List<String> fileList = new ArrayList<>();
         final List<String> dirList = new ArrayList<>();
-        buildFileLists(dir, fileList, dirList);
+        buildZipFileLists(dir, fileList, dirList);
 
         Long bestMatchHere = null;
         if (fileList.size() > 0) {
@@ -192,12 +212,13 @@ public class StroomZipRepository {
     }
 
     /**
-     * Build a list of valid file types. The list must contain files (just the
-     * base name) and not be locked e.g. "001", "100111", for "001.zip",
-     * "100111.zip" etc. "100112.zip.lock" would be ignored. And directories
-     * that are using our standard e.g. "001", "002" etc.
+     * Build a list of valid file types. The list must contain files (just the numerical part of the
+     * base name) and not be locked e.g. "001" for "001.zip", "100111" for "100111.zip", "102" for "102%SOME_FEED.zip" etc.
+     * "100112.zip.lock" would be ignored.
+     *
+     * Directories should use our standard form e.g. "001", "002" etc.
      */
-    private void buildFileLists(final File dir, final List<String> fileList, final List<String> dirList) {
+    private void buildZipFileLists(final File dir, final List<String> fileList, final List<String> dirList) {
         final String[] childFileArray = dir.list();
 
         // No Kids? exit
@@ -210,26 +231,29 @@ public class StroomZipRepository {
             // A small performance fix has been added here to only test sub dirs
             // that are 3 chars long as that's what the repo expects.
             if (kidFileName.length() == 3 && new File(dir, kidFileName).isDirectory()) {
-                if (kidFileName.length() == 3) {
-                    try {
-                        Integer.parseInt(kidFileName);
-                        dirList.add(kidFileName);
-                    } catch (final Exception ex) {
-                        LOGGER.warn("Directory " + dir + " contains invalid directory " + kidFileName
-                                    + " that is not 3 digits!");
-                    }
+                try {
+                    Integer.parseInt(kidFileName);
+                    dirList.add(kidFileName);
+                } catch (final Exception ex) {
+                    LOGGER.warn("Directory " + dir + " contains invalid directory " + kidFileName
+                            + " that is not 3 digits!");
                 }
             } else {
-                //remove the zip extension
-                String baseFilename = ZIP_EXTENSION_PATTERN.matcher(kidFileName).replaceFirst("");
-                //remove the templated part if there is one
-                if (templatePartPattern != null) {
-                    baseFilename = templatePartPattern.matcher(baseFilename).replaceFirst("");
-                }
-                if (BASE_FILENAME_PATTERN.matcher(baseFilename).matches()) {
-                    fileList.add(baseFilename);
-                } else {
-                    LOGGER.warn("File base name is not a valid repository file " + baseFilename);
+                // Only match files that end in '*.zip'.
+                if (kidFileName.endsWith(ZIP_EXTENSION)) {
+                    // Remove the zip extension
+                    String baseFilename = kidFileName.substring(0, kidFileName.length() - ZIP_EXTENSION.length());
+
+                    // Remove the templated part if there is one
+                    if (templatePartPattern != null) {
+                        baseFilename = templatePartPattern.matcher(baseFilename).replaceFirst("");
+                    }
+
+                    if (BASE_FILENAME_PATTERN.matcher(baseFilename).matches()) {
+                        fileList.add(baseFilename);
+                    } else {
+                        LOGGER.warn("File is not a valid repository file " + kidFileName);
+                    }
                 }
             }
         }
@@ -266,8 +290,8 @@ public class StroomZipRepository {
             throw new RuntimeException("No longer allowed to write new streams to a finished repository");
         }
         final String filename = StroomFileNameUtil.constructFilename(zipFilenameDelimiter, fileCount.incrementAndGet(),
-                                                                  filenameTemplate, headerMap,
-                                                                  ZIP_EXTENSION);
+                filenameTemplate, headerMap,
+                ZIP_EXTENSION);
         final File file = new File(baseLockDir, filename);
         // Ensure parent dir's exist
         FileUtil.mkdirs(file.getParentFile());
@@ -291,13 +315,13 @@ public class StroomZipRepository {
         final String path = zipFile.getFile().getAbsolutePath();
         if (path.endsWith(BAD_EXTENSION)) {
             return new File(path.substring(0, path.length() - ZIP_EXTENSION.length() - BAD_EXTENSION.length())
-                            + ERROR_EXTENSION + BAD_EXTENSION);
+                    + ERROR_EXTENSION + BAD_EXTENSION);
         } else {
             return new File(path.substring(0, path.length() - ZIP_EXTENSION.length()) + ERROR_EXTENSION);
         }
     }
 
-    @SuppressWarnings(value = "DM_DEFAULT_ENCODING", justification = "PrintWriter does not take a charset and this is only an error message")
+    @SuppressWarnings(value = "DM_DEFAULT_ENCODING")
     public void addErrorMessage(final StroomZipFile zipFile, final String msg, final boolean bad) {
         try {
             File errorFile = getErrorFile(zipFile);
@@ -327,7 +351,7 @@ public class StroomZipRepository {
     }
 
     public boolean isBad(final long id) {
-        //TODO do we really need ot build the full filename, can we just do a regex match instead
+        //TODO do we really need to build the full filename, can we just do a regex match instead
         return isFileOfType(id, ZIP_EXTENSION, BAD_EXTENSION);
     }
 
@@ -381,37 +405,40 @@ public class StroomZipRepository {
     }
 
     private void clean(final File root) {
-        final List<String> fileList = new ArrayList<String>();
-        final List<String> dirList = new ArrayList<String>();
-        buildFileLists(root, fileList, dirList);
+        final Path path = root.toPath();
 
-        for (final String subDir : dirList) {
-            clean(new File(root, subDir));
-        }
-
-        for (final String file : fileList) {
-            final File lockFile = new File(root, file + ZIP_EXTENSION + LOCK_EXTENSION);
-            if (lockFile.isFile()) {
-                final long oldestTimeMs = System.currentTimeMillis() - lockDeleteAgeMs;
-                final long lastModMs = lockFile.lastModified();
-                if (lastModMs < oldestTimeMs) {
-                    if (lockFile.delete()) {
-                        LOGGER.info("clean() - Removed old lock file due to age " + lockFile + " "
-                                    + DateUtil.createNormalDateTimeString());
-                    } else {
-                        LOGGER.error("clean() - Unable to remove old lock file dur to age " + lockFile);
+        try {
+            if (Files.isDirectory(path)) {
+                Files.walk(path).sorted(Comparator.reverseOrder()).forEach(p -> {
+                    try {
+                        if (p.toString().endsWith(".zip.lock")) {
+                            final long oldestTimeMs = System.currentTimeMillis() - lockDeleteAgeMs;
+                            final long lastModMs = Files.getLastModifiedTime(p).toMillis();
+                            if (lastModMs < oldestTimeMs) {
+                                try {
+                                    Files.delete(p);
+                                    LOGGER.info("clean() - Removed old lock file due to age " + p.toString() + " " + DateUtil.createNormalDateTimeString());
+                                } catch (final IOException e) {
+                                    LOGGER.error("clean() - Unable to remove old lock file due to age " + p.toString());
+                                }
+                            }
+                        } else if (p.getFileName().toString().length() == 3 && Files.isDirectory(p)) {
+                            deleteDirIfNotActive(p.toFile());
+                        }
+                    } catch (final Exception e) {
+                        LOGGER.error(e.getMessage(), e);
                     }
-                }
+                });
             }
+        } catch (final IOException e) {
+            LOGGER.error("Failed to clean repo " + path);
         }
-
-        deleteDirIfNotActive(root);
     }
 
     private void removeLock() {
         if (baseResultantDir != null) {
             if (!baseLockDir.renameTo(baseResultantDir)) {
-                throw new RuntimeException("Unable to rename dircetory " + baseLockDir + " to " + baseResultantDir);
+                throw new RuntimeException("Unable to rename directory " + baseLockDir + " to " + baseResultantDir);
             }
             baseResultantDir = null;
             // No-longer locked
