@@ -35,7 +35,7 @@ public abstract class StroomZipRepositoryProcessor {
     public final static String BAD_EXTENSION = ".bad";
     public final static int DEFAULT_MAX_AGGREGATION = 10000;
     public final static int DEFAULT_MAX_FILE_SCAN = 10000;
-    public final static long DEFAULT_MAX_STREAM_SIZE = ModelStringUtil.parseNumberString("10G");
+    public final static long DEFAULT_MAX_STREAM_SIZE = ModelStringUtil.parseIECByteSizeString("10G");
     private final StroomLogger LOGGER = StroomLogger.getLogger(StroomZipRepositoryProcessor.class);
     /**
      * Flag set to stop things
@@ -259,7 +259,7 @@ public abstract class StroomZipRepositoryProcessor {
     }
 
     public void setMaxStreamSizeString(final String maxStreamSizeString) {
-        this.maxStreamSize = ModelStringUtil.parseNumberString(maxStreamSizeString);
+        this.maxStreamSize = ModelStringUtil.parseIECByteSizeString(maxStreamSizeString);
     }
 
     public Long getMaxStreamSize() {
@@ -303,7 +303,7 @@ public abstract class StroomZipRepositoryProcessor {
             }
 
             if (LOGGER.isTraceEnabled()) {
-                LOGGER.trace("sendEntry() - " + targetEntry + " " + ModelStringUtil.formatByteSizeString(totalRead));
+                LOGGER.trace("sendEntry() - " + targetEntry + " " + ModelStringUtil.formatIECByteSizeString(totalRead));
             }
             if (totalRead == 0) {
                 LOGGER.warn("sendEntry() - " + targetEntry + " IS BLANK");
