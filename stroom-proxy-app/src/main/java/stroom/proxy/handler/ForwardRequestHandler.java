@@ -88,7 +88,7 @@ public class ForwardRequestHandler implements RequestHandler, HostnameVerifier {
             } finally {
                 LOGGER.info("handleFooter() - %s took %s to forward %s response %s - %s", guid,
                         ModelStringUtil.formatDurationString(System.currentTimeMillis() - startTimeMs),
-                        ModelStringUtil.formatByteSizeString(bytesSent), responseCode, headerMap);
+                        ModelStringUtil.formatIECByteSizeString(bytesSent), responseCode, headerMap);
                 connection.disconnect();
                 connection = null;
             }

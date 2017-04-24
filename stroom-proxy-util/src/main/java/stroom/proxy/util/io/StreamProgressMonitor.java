@@ -35,7 +35,7 @@ public class StreamProgressMonitor {
 
         if (lastProgressTime + INTERVAL_MS < timeNow) {
             lastProgressTime = timeNow;
-            String msg = prefix + " - " + ModelStringUtil.formatByteSizeString(totalBytes);
+            String msg = prefix + " - " + ModelStringUtil.formatIECByteSizeString(totalBytes);
             if (monitor != null) {
                 monitor.info(msg);
 
