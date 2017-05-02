@@ -47,7 +47,7 @@
         <fileSet>
             <directory>${project.basedir}</directory>
             <includes>
-                <include>**/*.sh</include>
+                <include>stroom-proxy/**/*.sh</include>
             </includes>
             <excludes>
                 <exclude>**/dev*.sh</exclude>
