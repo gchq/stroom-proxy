@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,8 +34,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Class that represents a repository on the file system. By default files are
@@ -89,7 +88,7 @@ public class StroomZipRepository {
     public StroomZipRepository(final String dir, final boolean lock, final int lockDeleteAgeMs,
                                final String zipFilenameDelimiter) {
         this.lockDeleteAgeMs = lockDeleteAgeMs;
-        if (!isDelimiterValid(zipFilenameDelimiter)){
+        if (!isDelimiterValid(zipFilenameDelimiter)) {
             LOGGER.error("zipFilenameDelimiter property [%s] is invalid, using the default [%s] instead",
                     zipFilenameDelimiter,
                     DEFAULT_ZIP_FILENAME_DELIMITER);
@@ -99,7 +98,7 @@ public class StroomZipRepository {
         }
 
         if (this.zipFilenameDelimiter != null && !this.zipFilenameDelimiter.isEmpty()) {
-            templatePartPattern = Pattern.compile( Pattern.quote(this.zipFilenameDelimiter) + ".*" );
+            templatePartPattern = Pattern.compile(Pattern.quote(this.zipFilenameDelimiter) + ".*");
         } else {
             templatePartPattern = null;
         }
@@ -215,7 +214,7 @@ public class StroomZipRepository {
      * Build a list of valid file types. The list must contain files (just the numerical part of the
      * base name) and not be locked e.g. "001" for "001.zip", "100111" for "100111.zip", "102" for "102%SOME_FEED.zip" etc.
      * "100112.zip.lock" would be ignored.
-     *
+     * <p>
      * Directories should use our standard form e.g. "001", "002" etc.
      */
     private void buildZipFileLists(final File dir, final List<String> fileList, final List<String> dirList) {
@@ -409,26 +408,28 @@ public class StroomZipRepository {
 
         try {
             if (Files.isDirectory(path)) {
-                Files.walk(path).sorted(Comparator.reverseOrder()).forEach(p -> {
-                    try {
-                        if (p.toString().endsWith(".zip.lock")) {
-                            final long oldestTimeMs = System.currentTimeMillis() - lockDeleteAgeMs;
-                            final long lastModMs = Files.getLastModifiedTime(p).toMillis();
-                            if (lastModMs < oldestTimeMs) {
-                                try {
-                                    Files.delete(p);
-                                    LOGGER.info("clean() - Removed old lock file due to age " + p.toString() + " " + DateUtil.createNormalDateTimeString());
-                                } catch (final IOException e) {
-                                    LOGGER.error("clean() - Unable to remove old lock file due to age " + p.toString());
+                try (final Stream<Path> stream = Files.walk(path)) {
+                    stream.sorted(Comparator.reverseOrder()).forEach(p -> {
+                        try {
+                            if (p.toString().endsWith(".zip.lock")) {
+                                final long oldestTimeMs = System.currentTimeMillis() - lockDeleteAgeMs;
+                                final long lastModMs = Files.getLastModifiedTime(p).toMillis();
+                                if (lastModMs < oldestTimeMs) {
+                                    try {
+                                        Files.delete(p);
+                                        LOGGER.info("clean() - Removed old lock file due to age " + p.toString() + " " + DateUtil.createNormalDateTimeString());
+                                    } catch (final IOException e) {
+                                        LOGGER.error("clean() - Unable to remove old lock file due to age " + p.toString());
+                                    }
                                 }
+                            } else if (p.getFileName().toString().length() == 3 && Files.isDirectory(p)) {
+                                deleteDirIfNotActive(p.toFile());
                             }
-                        } else if (p.getFileName().toString().length() == 3 && Files.isDirectory(p)) {
-                            deleteDirIfNotActive(p.toFile());
+                        } catch (final Exception e) {
+                            LOGGER.error(e.getMessage(), e);
                         }
-                    } catch (final Exception e) {
-                        LOGGER.error(e.getMessage(), e);
-                    }
-                });
+                    });
+                }
             }
         } catch (final IOException e) {
             LOGGER.error("Failed to clean repo " + path);
