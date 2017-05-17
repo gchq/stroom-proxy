@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#10** : Made changes to cope with Files.list() and Files.walk() returning streams that should be closed with 'try with resources' construct.
 
+* Issue **#7** : The repository format can now be tailored to customise the directory structure.
+
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
