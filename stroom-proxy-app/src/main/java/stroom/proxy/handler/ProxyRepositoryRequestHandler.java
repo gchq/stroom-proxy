@@ -1,10 +1,11 @@
 package stroom.proxy.handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import stroom.proxy.repo.HeaderMap;
 import stroom.proxy.repo.ProxyRepositoryManager;
-import stroom.proxy.util.logging.StroomLogger;
-import stroom.proxy.util.zip.StroomZipEntry;
-import stroom.proxy.util.zip.StroomZipOutputStream;
-import stroom.proxy.util.zip.HeaderMap;
+import stroom.proxy.repo.StroomZipEntry;
+import stroom.proxy.repo.StroomZipOutputStream;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -14,27 +15,17 @@ import java.io.OutputStream;
  * Factory to return back handlers for incoming and outgoing requests.
  */
 public class ProxyRepositoryRequestHandler implements RequestHandler {
-    private static StroomLogger LOGGER = StroomLogger.getLogger(ProxyRepositoryRequestHandler.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(ProxyRepositoryRequestHandler.class);
     @Resource
     ProxyRepositoryManager proxyRepositoryManager;
     @Resource
     HeaderMap headerMap;
-    OutputStream requestOutputStream;
+
     private StroomZipOutputStream stroomZipOutputStream;
     private OutputStream entryStream;
-    private String zipFilenameDelimiter;
-    private String zipFilenameTemplate;
     private boolean doneOne = false;
 
     public ProxyRepositoryRequestHandler() {
-    }
-
-    public void setZipFilenameTemplate(final String zipFilenameTemplate) {
-        this.zipFilenameTemplate = zipFilenameTemplate;
-    }
-
-    public void setZipFilenameDelimiter(final String zipFilenameDelimiter) {
-        this.zipFilenameDelimiter = zipFilenameDelimiter;
     }
 
     @Override
@@ -67,14 +58,13 @@ public class ProxyRepositoryRequestHandler implements RequestHandler {
 
     @Override
     public void handleHeader() throws IOException {
-        stroomZipOutputStream = proxyRepositoryManager.getActiveRepository().getStroomZipOutputStream(headerMap,
-                                                                                                zipFilenameTemplate);
+        stroomZipOutputStream = proxyRepositoryManager.getActiveRepository().getStroomZipOutputStream(headerMap);
     }
 
     @Override
     public void handleError() throws IOException {
         if (stroomZipOutputStream != null) {
-            LOGGER.info("handleError() - Removing part written file " + stroomZipOutputStream.getFinalFile());
+            LOGGER.info("Removing part written file {}", stroomZipOutputStream);
             stroomZipOutputStream.closeDelete();
         }
     }
@@ -82,6 +72,4 @@ public class ProxyRepositoryRequestHandler implements RequestHandler {
     @Override
     public void validate() {
     }
-
-
 }

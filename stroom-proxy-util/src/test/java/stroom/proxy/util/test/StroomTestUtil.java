@@ -6,6 +6,8 @@ import stroom.proxy.util.thread.ThreadUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -49,34 +51,58 @@ public class StroomTestUtil {
         return dir;
     }
 
-    public static File createUniqueTestDir(final File parentDir) throws IOException {
-        if (!parentDir.isDirectory()) {
-            throw new IOException("The parent directory '" + FileUtil.getCanonicalPath(parentDir) + "' does not exist");
+//    public static File createUniqueTestDir(final File parentDir) throws IOException {
+//        if (!parentDir.isDirectory()) {
+//            throw new IOException("The parent directory '" + FileUtil.getCanonicalPath(parentDir) + "' does not exist");
+//        }
+//
+//        File dir = null;
+//        for (int i = 0; i < 100; i++) {
+//            dir = new File(parentDir, FORMAT.format(ZonedDateTime.now(ZoneOffset.UTC)));
+//            if (dir.mkdir()) {
+//                break;
+//            } else {
+//                dir = null;
+//                ThreadUtil.sleep(100);
+//            }
+//        }
+//
+//        if (dir == null) {
+//            throw new IOException("Unable to create unique test dir in: " + FileUtil.getCanonicalPath(parentDir));
+//        }
+//
+//        return dir;
+//    }
+
+    public static Path createUniqueTestDir(final Path parentDir) throws IOException {
+        if (!Files.isDirectory(parentDir)) {
+            throw new IOException("The parent directory '" + parentDir.toAbsolutePath().toString() + "' does not exist");
         }
 
-        File dir = null;
+        Path dir = null;
         for (int i = 0; i < 100; i++) {
-            dir = new File(parentDir, FORMAT.format(ZonedDateTime.now(ZoneOffset.UTC)));
-            if (dir.mkdir()) {
+            dir = parentDir.resolve(FORMAT.format(ZonedDateTime.now(ZoneOffset.UTC)));
+            try {
+                Files.createDirectories(dir);
                 break;
-            } else {
+            } catch (final IOException e) {
                 dir = null;
                 ThreadUtil.sleep(100);
             }
         }
 
         if (dir == null) {
-            throw new IOException("Unable to create unique test dir in: " + FileUtil.getCanonicalPath(parentDir));
+            throw new IOException("Unable to create unique test dir in: " + parentDir.toAbsolutePath().toString());
         }
 
         return dir;
     }
-
-    public static void destroyTestDir(final File testDir) {
-        try {
-            FileUtils.deleteDirectory(testDir);
-        } catch (final IOException e) {
-            // Ignore
-        }
-    }
+//
+//    public static void destroyTestDir(final File testDir) {
+//        try {
+//            FileUtils.deleteDirectory(testDir);
+//        } catch (final IOException e) {
+//            // Ignore
+//        }
+//    }
 }

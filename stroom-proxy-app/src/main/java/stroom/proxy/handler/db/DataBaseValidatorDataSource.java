@@ -8,8 +8,8 @@ import javax.sql.DataSource;
 import org.springframework.util.StringUtils;
 
 import stroom.proxy.util.logging.StroomLogger;
-import stroom.proxy.util.zip.StroomStatusCode;
-import stroom.proxy.util.zip.StroomStreamException;
+import stroom.proxy.StroomStatusCode;
+import stroom.proxy.handler.StroomStreamException;
 
 public class DataBaseValidatorDataSource {
     private final static StroomLogger LOGGER = StroomLogger.getLogger(DataBaseValidatorDataSource.class);

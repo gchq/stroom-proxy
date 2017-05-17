@@ -555,6 +555,7 @@
   </dependencies>
 
   <modules>
+      <module>stroom-proxy-repo</module>
       <module>stroom-proxy-util</module>
       <module>stroom-proxy-remote</module>
       <module>stroom-proxy-app</module>

@@ -1,7 +1,7 @@
 package stroom.proxy.feed.remote;
 
+import stroom.proxy.StroomStatusCode;
 import stroom.proxy.remote.RemoteResponse;
-import stroom.proxy.util.zip.StroomStatusCode;
 
 public class GetFeedStatusResponse extends RemoteResponse {
     private static final long serialVersionUID = 9221787861812287256L;

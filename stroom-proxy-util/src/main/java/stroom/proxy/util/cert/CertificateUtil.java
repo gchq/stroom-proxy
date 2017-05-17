@@ -1,19 +1,21 @@
 package stroom.proxy.util.cert;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.security.auth.x500.X500Principal;
+import javax.servlet.http.HttpServletRequest;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.security.auth.x500.X500Principal;
-import javax.servlet.http.HttpServletRequest;
-
-import stroom.proxy.util.logging.StroomLogger;
-import stroom.proxy.util.zip.HeaderMap;
-
 public class CertificateUtil {
-    private static final StroomLogger LOGGER = StroomLogger.getLogger(CertificateUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CertificateUtil.class);
 
     /**
      * API into the request for the certificate details.
@@ -41,8 +43,7 @@ public class CertificateUtil {
      * Pull out the Subject from the certificate. E.g.
      * "CN=some.server.co.uk, OU=servers, O=some organisation, C=GB"
      *
-     * @param certs
-     *            ARGS from the SERVLET request.
+     * @param certs ARGS from the SERVLET request.
      */
     public static java.security.cert.X509Certificate extractCertificate(final Object[] certs) {
         if (certs != null) {
@@ -92,11 +93,16 @@ public class CertificateUtil {
      * @return null or the CN name
      */
     public static String extractCNFromDN(final String dn) {
+        return parseDn(dn).get("CN");
+    }
+
+    private static Map<String, String> parseDn(final String dn) {
         if (dn == null) {
-            return null;
+            return Collections.emptyMap();
         }
+
+        final Map<String, String> map = new HashMap<>();
         final StringTokenizer attributes = new StringTokenizer(dn, ",");
-        final HeaderMap map = new HeaderMap();
         while (attributes.hasMoreTokens()) {
             final String token = attributes.nextToken();
             if (token.contains("=")) {
@@ -106,7 +112,7 @@ public class CertificateUtil {
                 }
             }
         }
-        return map.get("CN");
+        return map;
     }
 
     /**
@@ -144,10 +150,9 @@ public class CertificateUtil {
      * that the values in the fields should not be normalised - they are
      * case-sensitive.
      *
-     * @param dn
-     *            Distinguished Name to normalise. Must be RFC 2253-compliant
+     * @param dn Distinguished Name to normalise. Must be RFC 2253-compliant
      * @return The DN in RFC 2253 format, with a consistent case for the field
-     *         names and separation
+     * names and separation
      */
     public static String dnToRfc2253(final String dn) {
         if (LOGGER.isTraceEnabled()) {

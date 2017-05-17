@@ -47,6 +47,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>stroom-proxy</groupId>
+            <artifactId>stroom-proxy-repo</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!--<dependency>-->
             <!--<groupId>stroom</groupId>-->
             <!--<artifactId>stroom-doc</artifactId>-->

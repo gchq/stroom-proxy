@@ -18,7 +18,7 @@
 		<property name="name" value="webContext" />
 	</bean>
 
-	<bean id="headerMapFactory" class="stroom.proxy.util.zip.HeaderMapFactory" />
+	<bean id="headerMapFactory" class="stroom.proxy.handler.HeaderMapFactory" />
 	<bean id="headerMap" scope="request" factory-bean="headerMapFactory" factory-method="create" />
 	<bean id="dataFeedRequestHandler" class="stroom.proxy.datafeed.DataFeedRequestHandler" scope="request" />
 	<bean id="proxyRequestThreadLocalBuffer" class=" stroom.proxy.util.thread.ThreadLocalBuffer" />

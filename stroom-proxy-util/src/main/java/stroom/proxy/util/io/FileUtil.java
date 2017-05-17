@@ -17,13 +17,13 @@ public final class FileUtil {
     /**
      * JVM wide temp dir
      */
-    private volatile static File tempDir = null;
+    private volatile static Path tempDir = null;
 
     private FileUtil() {
         // Utility.
     }
 
-    public static File getInitialTempDir() {
+    public static Path getInitialTempPath() {
         final String pathString = StroomProperties.getProperty(StroomProperties.STROOM_TEMP);
         if (pathString == null) {
             throw new RuntimeException("No temp path is specified");
@@ -39,14 +39,14 @@ public final class FileUtil {
             }
         }
 
-        return path.toFile();
+        return path;
     }
 
-    public static File getTempDir() {
+    public static Path getTempPath() {
         if (tempDir == null) {
             synchronized (FileUtil.class) {
                 if (tempDir == null) {
-                    tempDir = getInitialTempDir();
+                    tempDir = getInitialTempPath();
                 }
             }
         }
@@ -54,29 +54,12 @@ public final class FileUtil {
         return tempDir;
     }
 
-    public static void useDevTempDir() {
-        try {
-            final File tempDir = getTempDir();
+    public static File getInitialTempDir() {
+        return getInitialTempPath().toFile();
+    }
 
-            final File devDir = new File(tempDir, "dev");
-            mkdirs(devDir);
-
-            final String path = devDir.getCanonicalPath();
-
-            // Redirect the temp dir for dev.
-
-            StroomProperties.setOverrideProperty(StroomProperties.STROOM_TEMP, path, "dev");
-            // Also set the temp dir as a system property as EclipseDevMode
-            // starts a new JVM and will forget this property otherwise.
-            System.setProperty(StroomProperties.STROOM_TEMP, path);
-
-            LOGGER.info("Using temp dir '" + path + "'");
-
-            forgetTempDir();
-
-        } catch (final IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+    public static File getTempDir() {
+        return getTempPath().toFile();
     }
 
     public static void forgetTempDir() throws IOException {
@@ -97,14 +80,6 @@ public final class FileUtil {
                 throw new FileUtilException("Path is directory not file \"" + file.getAbsolutePath() + "\"");
             }
 
-            if (!file.delete()) {
-                throw new FileUtilException("Unable to delete \"" + file.getAbsolutePath() + "\"");
-            }
-        }
-    }
-
-    public static void deleteDir(final File file) {
-        if (file.exists()) {
             if (!file.delete()) {
                 throw new FileUtilException("Unable to delete \"" + file.getAbsolutePath() + "\"");
             }
@@ -173,19 +148,6 @@ public final class FileUtil {
         }
         return true;
 
-    }
-
-    public static void rename(final File src, final File dest) {
-        if (!src.renameTo(dest)) {
-            throw new FileUtilException(
-                    "Unable to rename file \"" + src.getAbsolutePath() + "\" to \"" + dest.getAbsolutePath() + "\"");
-        }
-    }
-
-    public static void setLastModified(final File file, final long time) throws IOException {
-        if (!file.setLastModified(time)) {
-            throw new FileUtilException("Unable to set last modified on file: " + file.getAbsolutePath());
-        }
     }
 
     public static String getCanonicalPath(final File file) {

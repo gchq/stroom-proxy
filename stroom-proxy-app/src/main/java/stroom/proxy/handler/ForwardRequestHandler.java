@@ -1,26 +1,23 @@
 package stroom.proxy.handler;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Map.Entry;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import org.springframework.util.StringUtils;
+import stroom.proxy.repo.HeaderMap;
+import stroom.proxy.repo.StroomZipEntry;
+import stroom.proxy.util.logging.StroomLogger;
+import stroom.proxy.util.shared.ModelStringUtil;
+import stroom.proxy.util.thread.ThreadUtil;
 
 import javax.annotation.Resource;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
-
-import org.springframework.util.StringUtils;
-
-import stroom.proxy.util.logging.StroomLogger;
-import stroom.proxy.util.shared.ModelStringUtil;
-import stroom.proxy.util.thread.ThreadUtil;
-import stroom.proxy.util.zip.StroomHeaderArguments;
-import stroom.proxy.util.zip.StroomStreamException;
-import stroom.proxy.util.zip.StroomZipEntry;
-import stroom.proxy.util.zip.HeaderMap;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Map.Entry;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Handler class that forwards the request to a URL.
@@ -109,7 +106,7 @@ public class ForwardRequestHandler implements RequestHandler, HostnameVerifier {
             LOGGER.info("handleHeader() - " + getForwardUrl() + " Sending request " + headerMap);
         }
         startTimeMs = System.currentTimeMillis();
-        guid = headerMap.getOrCreateGuid();
+        guid = headerMap.computeIfAbsent(StroomHeaderArguments.GUID, k -> UUID.randomUUID().toString());
 
         URL url = new URL(getForwardUrl());
         connection = (HttpURLConnection) url.openConnection();
@@ -130,7 +127,7 @@ public class ForwardRequestHandler implements RequestHandler, HostnameVerifier {
 
         connection.addRequestProperty(StroomHeaderArguments.COMPRESSION, StroomHeaderArguments.COMPRESSION_ZIP);
 
-        HeaderMap sendHeader = headerMap.cloneAllowable();
+        HeaderMap sendHeader = HeaderMapFactory.cloneAllowable(headerMap);
         for (Entry<String, String> entry : sendHeader.entrySet()) {
             connection.addRequestProperty(entry.getKey(), entry.getValue());
         }

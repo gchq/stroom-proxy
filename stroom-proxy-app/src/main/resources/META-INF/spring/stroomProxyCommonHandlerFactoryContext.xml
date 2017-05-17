@@ -55,8 +55,7 @@
                 cacheTimeToIdleSeconds=60
                 cacheTimeToLiveSeconds=60
                 logRequest=guid,feed,system,environment,remotehost,remoteaddress
-                zipFilenameDelimiter
-                zipFilenameTemplate
+                repositoryFormat
             </value>
         </property>
         <property name="ignoreResourceNotFound" value="true"/>
@@ -69,7 +68,7 @@
         <property name="name" value="proxyContext"/>
     </bean>
 
-    <bean id="headerMap" class="stroom.proxy.util.zip.HeaderMap" scope="thread" lazy-init="true"/>
+    <bean id="headerMap" class="stroom.proxy.repo.HeaderMap" scope="thread" lazy-init="true"/>
 
     <!--  Define some custom scopes -->
     <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">

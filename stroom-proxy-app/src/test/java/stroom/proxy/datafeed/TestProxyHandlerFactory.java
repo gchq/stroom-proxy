@@ -1,17 +1,16 @@
 package stroom.proxy.datafeed;
 
-import java.util.List;
-import java.util.Properties;
-
 import org.junit.Assert;
 import org.junit.Test;
-
 import stroom.proxy.handler.ForwardRequestHandler;
 import stroom.proxy.handler.ProxyRepositoryRequestHandler;
 import stroom.proxy.handler.RequestHandler;
 import stroom.proxy.util.ProxyProperties;
 import stroom.proxy.util.test.StroomUnitTest;
 import stroom.proxy.util.thread.ThreadScopeContextHolder;
+
+import java.util.List;
+import java.util.Properties;
 
 public class TestProxyHandlerFactory extends StroomUnitTest {
     @SuppressWarnings("unchecked")
@@ -20,7 +19,7 @@ public class TestProxyHandlerFactory extends StroomUnitTest {
         try {
             final Properties properties = new Properties();
             properties.setProperty(ProxyProperties.FORWARD_URL, "https://url1,https://url2");
-            properties.setProperty(ProxyProperties.REPO_DIR, getCurrentTestDir().getCanonicalPath());
+            properties.setProperty(ProxyProperties.REPO_DIR, getCurrentTestPath().toAbsolutePath().toString());
             ProxyProperties.setOverrideProperties(properties);
 
             final ProxyHandlerFactory proxyHandlerFactory = new ProxyHandlerFactory();
@@ -91,7 +90,7 @@ public class TestProxyHandlerFactory extends StroomUnitTest {
     public void testStore() throws Exception {
         try {
             final Properties properties = new Properties();
-            properties.setProperty(ProxyProperties.REPO_DIR, getCurrentTestDir().getCanonicalPath());
+            properties.setProperty(ProxyProperties.REPO_DIR, getCurrentTestPath().toAbsolutePath().toString());
 
             ProxyProperties.setOverrideProperties(properties);
 

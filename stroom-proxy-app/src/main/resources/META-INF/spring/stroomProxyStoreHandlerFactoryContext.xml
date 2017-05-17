@@ -4,11 +4,9 @@
 
     <bean name="proxyRepositoryRequestHandler" class="stroom.proxy.handler.ProxyRepositoryRequestHandler"
           scope="thread">
-        <property name="zipFilenameDelimiter" value="${zipFilenameDelimiter}"/>
-        <property name="zipFilenameTemplate" value="${zipFilenameTemplate}"/>
     </bean>
 
-    <bean name="proxyRepositoryReader" class="stroom.proxy.handler.ProxyRepositoryReader">
+    <bean name="proxyRepositoryReader" class="stroom.proxy.repo.ProxyRepositoryReader">
         <property name="simpleCron" value="${readCron}"/>
         <lookup-method name="createOutgoingRequestHandlerList"
                        bean="outgoingRequestHandlerList"/>
@@ -18,7 +16,7 @@
     <bean name="proxyRepositoryManager" class="stroom.proxy.repo.ProxyRepositoryManager">
         <property name="repoDir" value="${repoDir}"/>
         <property name="simpleCron" value="${rollCron}"/>
-        <property name="zipFilenameDelimiter" value="${zipFilenameDelimiter}"/>
+        <property name="repositoryFormat" value="${repositoryFormat}"/>
     </bean>
 
     <bean class="stroom.proxy.util.spring.ListMerge">

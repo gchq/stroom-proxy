@@ -6,8 +6,12 @@ import stroom.proxy.util.spring.PropertyConfigurer;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 public class ProxyProperties {
     public final static String REMOTING_URL = "remotingUrl";
@@ -24,8 +28,7 @@ public class ProxyProperties {
     private final static String ROLL_CRON = "rollCron";
     private final static String READ_CRON = "readCron";
     private final static String MAX_AGGREGATION = "maxAggregation";
-    private final static String ZIP_FILENAME_DELIMITER = "zipFilenameDelimiter";
-    private final static String ZIP_FILENAME_TEMPLATE = "zipFilenameTemplate";
+    private final static String REPOSITORY_FORMAT = "repositoryFormat";
 
     private final static String REQUEST_DELAY_MS = "requestDelayMs";
     private final static String FORWARD_DELAY_MS = "forwardDelayMs";
@@ -50,7 +53,7 @@ public class ProxyProperties {
 
     static {
         propertyDescriptionMap.put(FORWARD_URL,
-                                   "Optional The URL's to forward onto" + " This is pass-through mode if repoDir is not set");
+                "Optional The URL's to forward onto" + " This is pass-through mode if repoDir is not set");
 
         propertyDescriptionMap.put(FORWARD_THREAD_COUNT, "Number of threads to forward with");
 
@@ -61,46 +64,50 @@ public class ProxyProperties {
         propertyDescriptionMap.put(FORWARD_TIMEOUT_MS, "Time out when forwarding");
 
         propertyDescriptionMap.put(FORWARD_CHUNK_SIZE,
-                                   "Chunk size to use over http(s) if not set requires buffer to be fully loaded into memory");
+                "Chunk size to use over http(s) if not set requires buffer to be fully loaded into memory");
 
         propertyDescriptionMap.put(FORWARD_DELAY_MS, "Debug setting to add a delay");
 
         propertyDescriptionMap.put(DB_REQUEST_VALIDATOR_CONTEXT, "Database Feed Validator - Data base JDBC context");
 
         propertyDescriptionMap.put(DB_REQUEST_VALIDATOR_JNDI_NAME,
-                                   "Database Feed Validator - Data base JDBC JNDI name");
+                "Database Feed Validator - Data base JDBC JNDI name");
 
         propertyDescriptionMap.put(DB_REQUEST_VALIDATOR_FEED_QUERY,
-                                   "Database Feed Validator - SQL to check feed status");
+                "Database Feed Validator - SQL to check feed status");
 
         propertyDescriptionMap.put(DB_REQUEST_VALIDATOR_AUTH_QUERY,
-                                   "Database Feed Validator - SQL to check authorisation required");
+                "Database Feed Validator - SQL to check authorisation required");
 
         propertyDescriptionMap.put(REMOTING_URL, "Url to use for remoting services");
 
         propertyDescriptionMap.put(REPO_DIR,
-                                   "Optional Repository DIR. " + "If set any incoming request will be written to the file system.");
+                "Optional Repository DIR. " + "If set any incoming request will be written to the file system.");
 
         propertyDescriptionMap.put(ROLL_CRON, "Interval to roll any writing repositories.");
 
         propertyDescriptionMap.put(READ_CRON,
-                                   "Cron style interval (e.g. every hour '0 * *', every half hour '0,30 * *') to read any ready " +
-                                   "repositories (if not defined we read all the time).");
+                "Cron style interval (e.g. every hour '0 * *', every half hour '0,30 * *') to read any ready " +
+                        "repositories (if not defined we read all the time).");
 
         propertyDescriptionMap.put(MAX_AGGREGATION, "Aggregate size to break at when building an aggregate.");
 
-        propertyDescriptionMap.put(ZIP_FILENAME_DELIMITER,
-                                   "The delimiter used to separate the id ihe zip filename from the templated part");
-
-        propertyDescriptionMap.put(ZIP_FILENAME_TEMPLATE,
-                                   "A template for naming the zip files in the repository where files will be named " +
-                                   "nnn!zipFilenameTemplate.zip where nnn is the id prefix, ! is the configurable delimiter and " +
-                                   "zipFilenameTemplate will be something like '${feed}!${headerMapKey1}!${headerMapKey2}'. The name of " +
-                                   "each variable must exactly match a key in the meta data else it will resolve to ''.");
+        propertyDescriptionMap.put(REPOSITORY_FORMAT,
+                "Optionally supply a template for naming the files in the repository. This can be specified using multiple replacement variables.\n" +
+                        "The standard template is '${pathId}/{$id}' and will be used if this property is not set.\n" +
+                        "This pattern will produce the following paths for the following identities:\n" +
+                        "\t1 = 001.zip\n" +
+                        "\t100 = 100.zip\n" +
+                        "\t1000 = 001/001000.zip\n" +
+                        "\t10000 = 010/010000.zip\n" +
+                        "\t100000 = 100/100000.zip\n" +
+                        "Other replacement variables can be used to in the template including header meta data parameters (e.g. '${feed}') and time based parameters (e.g. '${year}').\n" +
+                        "Replacement variables that cannot be resolved will be output as '_'.\n" +
+                        "Please ensure that all templates include the '${id}' replacement variable at the start of the file name, failure to do this will result in an invalid repository.");
 
         propertyDescriptionMap.put(MAX_FILE_SCAN,
-                                   "Max number of files to scan over during forwarding.  Once this limit is it it will wait until next " +
-                                   "read interval");
+                "Max number of files to scan over during forwarding.  Once this limit is it it will wait until next " +
+                        "read interval");
 
         propertyDescriptionMap.put(MAX_STREAM_SIZE, "Stream size to break at when building an aggregate.");
 
@@ -108,16 +115,16 @@ public class ProxyProperties {
         propertyDescriptionMap.put(REMOTING_READ_TIMEOUT_MS, "Change from the default JVM settings.");
 
         propertyDescriptionMap.put(LOG_REQUEST,
-                                   "Optional log line with header attributes output as defined by this property");
+                "Optional log line with header attributes output as defined by this property");
 
         propertyDescriptionMap.put(CACHE_TIME_TO_LIVE_SECONDS,
-                                   "Time to live settings to used for validating feed information");
+                "Time to live settings to used for validating feed information");
 
         propertyDescriptionMap.put(CACHE_TIME_TO_IDLE_SECONDS,
-                                   "Time to idle settings to used for validating feed information");
+                "Time to idle settings to used for validating feed information");
 
         propertyDescriptionMap.put(LOG_REQUEST,
-                                   "Optional log line with header attributes output as defined by this property");
+                "Optional log line with header attributes output as defined by this property");
 
         propertyDescriptionMap = Collections.unmodifiableMap(propertyDescriptionMap);
     }
@@ -189,13 +196,13 @@ public class ProxyProperties {
      */
     private static void updateJavaSystemProperties(Properties properties) {
         properties.keySet().stream()
-                  .map(String::valueOf)
-                  .filter(key -> key.equals("java"))
-                  .forEach(key -> {
-                      String value = properties.getProperty(key);
-                      LOGGER.info("updateJavaSystemProperties() - Using property " + key + "=" + value);
-                      System.setProperty(key, value);
-                  });
+                .map(String::valueOf)
+                .filter(key -> key.equals("java"))
+                .forEach(key -> {
+                    String value = properties.getProperty(key);
+                    LOGGER.info("updateJavaSystemProperties() - Using property " + key + "=" + value);
+                    System.setProperty(key, value);
+                });
 
         //TODO old java7 code
 //        for (Entry<Object, Object> map : properties.entrySet()) {

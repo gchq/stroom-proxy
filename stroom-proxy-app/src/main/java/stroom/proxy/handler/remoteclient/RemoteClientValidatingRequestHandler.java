@@ -1,21 +1,20 @@
 package stroom.proxy.handler.remoteclient;
 
-import java.io.IOException;
-
-import javax.annotation.Resource;
-
+import stroom.proxy.StroomStatusCode;
 import stroom.proxy.feed.remote.FeedStatus;
 import stroom.proxy.feed.remote.GetFeedStatusRequest;
 import stroom.proxy.feed.remote.GetFeedStatusResponse;
 import stroom.proxy.handler.DropStreamException;
 import stroom.proxy.handler.LocalFeedService;
 import stroom.proxy.handler.RequestHandler;
+import stroom.proxy.handler.StroomHeaderArguments;
+import stroom.proxy.handler.StroomStreamException;
+import stroom.proxy.repo.HeaderMap;
+import stroom.proxy.repo.StroomZipEntry;
 import stroom.proxy.util.logging.StroomLogger;
-import stroom.proxy.util.zip.StroomHeaderArguments;
-import stroom.proxy.util.zip.StroomStatusCode;
-import stroom.proxy.util.zip.StroomStreamException;
-import stroom.proxy.util.zip.StroomZipEntry;
-import stroom.proxy.util.zip.HeaderMap;
+
+import javax.annotation.Resource;
+import java.io.IOException;
 
 public class RemoteClientValidatingRequestHandler implements RequestHandler {
     private static StroomLogger LOGGER = StroomLogger.getLogger(RemoteClientValidatingRequestHandler.class);

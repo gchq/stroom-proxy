@@ -1,20 +1,12 @@
 package stroom.proxy.datafeed;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.Resource;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.HttpRequestHandler;
-
 import stroom.proxy.handler.DropStreamException;
 import stroom.proxy.handler.RequestHandler;
+import stroom.proxy.handler.StroomStreamException;
+import stroom.proxy.handler.StroomStreamProcessor;
+import stroom.proxy.repo.HeaderMap;
 import stroom.proxy.util.ProxyProperties;
 import stroom.proxy.util.io.CloseableUtil;
 import stroom.proxy.util.logging.StroomLogger;
@@ -22,13 +14,19 @@ import stroom.proxy.util.shared.ModelStringUtil;
 import stroom.proxy.util.thread.ThreadLocalBuffer;
 import stroom.proxy.util.thread.ThreadScopeContextHolder;
 import stroom.proxy.util.thread.ThreadScopeRunnable;
-import stroom.proxy.util.zip.StroomStreamException;
-import stroom.proxy.util.zip.StroomStreamProcessor;
-import stroom.proxy.util.zip.HeaderMap;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Main entry point to handling proxy requests.
- *
+ * <p>
  * This class used the main spring context and forwards the request on to our
  * dynamic mini proxy.
  */

@@ -1,15 +1,11 @@
 package stroom.proxy.repo;
 
-import stroom.proxy.util.io.StreamUtil;
-import stroom.proxy.util.scheduler.Scheduler;
-import stroom.proxy.util.test.StroomUnitTest;
-import stroom.proxy.util.zip.StroomZipFile;
-import stroom.proxy.util.zip.StroomZipOutputStream;
-import stroom.proxy.util.zip.StroomZipOutputStreamUtil;
-import stroom.proxy.util.zip.StroomZipRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import stroom.proxy.util.io.StreamUtil;
+import stroom.proxy.util.scheduler.Scheduler;
+import stroom.proxy.util.test.StroomUnitTest;
 
 import java.io.IOException;
 
@@ -23,7 +19,7 @@ public class TestProxyRepositoryManager extends StroomUnitTest {
     @Test
     public void testRolling() throws IOException {
         final ProxyRepositoryManager proxyRepositoryManager = new ProxyRepositoryManager();
-        proxyRepositoryManager.setRepoDir(getCurrentTestDir().getCanonicalPath());
+        proxyRepositoryManager.setRepoDir(getCurrentTestPath().toAbsolutePath().toString());
         proxyRepositoryManager.setScheduler(new Scheduler() {
             @Override
             public boolean execute() {
@@ -67,7 +63,7 @@ public class TestProxyRepositoryManager extends StroomUnitTest {
     @Test
     public void testNonRolling() throws IOException {
         final ProxyRepositoryManager proxyRepositoryManager = new ProxyRepositoryManager();
-        proxyRepositoryManager.setRepoDir(getCurrentTestDir().getCanonicalPath());
+        proxyRepositoryManager.setRepoDir(getCurrentTestPath().toAbsolutePath().toString());
         proxyRepositoryManager.setScheduler(null);
 
         final StroomZipRepository proxyRepository1 = proxyRepositoryManager.getActiveRepository();

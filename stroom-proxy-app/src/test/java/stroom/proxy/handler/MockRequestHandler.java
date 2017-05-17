@@ -1,11 +1,11 @@
 package stroom.proxy.handler;
 
+import stroom.proxy.repo.StroomZipEntry;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import stroom.proxy.util.zip.StroomZipEntry;
 
 public class MockRequestHandler implements RequestHandler {
     private List<String> entryNameList = new ArrayList<>();

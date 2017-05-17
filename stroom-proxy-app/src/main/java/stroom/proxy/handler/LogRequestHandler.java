@@ -1,13 +1,12 @@
 package stroom.proxy.handler;
 
-import java.io.IOException;
-import java.util.List;
+import stroom.proxy.repo.HeaderMap;
+import stroom.proxy.repo.StroomZipEntry;
+import stroom.proxy.util.logging.StroomLogger;
 
 import javax.annotation.Resource;
-
-import stroom.proxy.util.logging.StroomLogger;
-import stroom.proxy.util.zip.StroomZipEntry;
-import stroom.proxy.util.zip.HeaderMap;
+import java.io.IOException;
+import java.util.List;
 
 public class LogRequestHandler implements RequestHandler {
     private static StroomLogger LOGGER = StroomLogger.getLogger(LogRequestHandler.class);

@@ -18,7 +18,7 @@ import stroom.proxy.util.test.StroomJUnit4ClassRunner;
 public class TestFileUtil extends StroomUnitTest {
     @Test
     public void testMkdirs() throws IOException {
-        final String tempDir = getCurrentTestDir().getCanonicalPath();
+        final String tempDir = getCurrentTestPath().toAbsolutePath().toString();
         final String rootDir = tempDir + "/TestFileUtil_" + System.currentTimeMillis();
 
         final String[] dirArray = new String[10];

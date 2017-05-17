@@ -1,13 +1,7 @@
 package stroom.proxy.repo;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.StringUtils;
-
 import stroom.proxy.util.date.DateUtil;
 import stroom.proxy.util.io.FileNameUtil;
 import stroom.proxy.util.io.FileUtil;
@@ -17,7 +11,11 @@ import stroom.proxy.util.scheduler.SimpleCron;
 import stroom.proxy.util.spring.StroomShutdown;
 import stroom.proxy.util.spring.StroomStartup;
 import stroom.proxy.util.thread.ThreadUtil;
-import stroom.proxy.util.zip.StroomZipRepository;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Manager class that handles rolling the repository if required. Also tracks
@@ -36,7 +34,7 @@ public class ProxyRepositoryManager implements Runnable {
     private volatile File rootRepoDir = null;
     private volatile int lockDeleteAgeMs = 1000 * 60 * 60;
 
-    private String zipFilenameDelimiter;
+    private volatile String repositoryFormat;
 
     @StroomStartup(priority = 100)
     public synchronized void start() {
@@ -84,14 +82,14 @@ public class ProxyRepositoryManager implements Runnable {
                                 } else {
                                     LOGGER.info("scanForOldRepositories() - Unlocking old locked repository "
                                             + expectedDir);
-                                    rolledRepository.add(new StroomZipRepository(expectedDir.getAbsolutePath(), false,
-                                            lockDeleteAgeMs, zipFilenameDelimiter));
+                                    rolledRepository.add(new StroomZipRepository(expectedDir.getAbsolutePath(), repositoryFormat, false,
+                                            lockDeleteAgeMs));
                                 }
                             } else {
                                 LOGGER.info(
                                         "scanForOldRepositories() - Picking up old rolled repository " + expectedDir);
                                 rolledRepository.add(
-                                        new StroomZipRepository(expectedDir.getAbsolutePath(), false, lockDeleteAgeMs, zipFilenameDelimiter));
+                                        new StroomZipRepository(expectedDir.getAbsolutePath(), repositoryFormat, false, lockDeleteAgeMs));
                             }
                         } catch (final IllegalArgumentException pex) {
                             LOGGER.warn(
@@ -111,12 +109,12 @@ public class ProxyRepositoryManager implements Runnable {
                     if (scheduler == null) {
                         // Open a static repository
                         activeRepository
-                                .set(new StroomZipRepository(rootRepoDir.getAbsolutePath(), false, lockDeleteAgeMs, zipFilenameDelimiter));
+                                .set(new StroomZipRepository(rootRepoDir.getAbsolutePath(), repositoryFormat, false, lockDeleteAgeMs));
                     } else {
                         final String dir = rootRepoDir.getAbsolutePath() + "/"
                                 + DateUtil.createFileDateTimeString(System.currentTimeMillis());
                         // Open a rolling repository
-                        activeRepository.set(new StroomZipRepository(dir, true, lockDeleteAgeMs, zipFilenameDelimiter));
+                        activeRepository.set(new StroomZipRepository(dir, repositoryFormat, true, lockDeleteAgeMs));
                     }
                 }
             }
@@ -125,7 +123,7 @@ public class ProxyRepositoryManager implements Runnable {
     }
 
     public List<StroomZipRepository> getReadableRepository() {
-        final List<StroomZipRepository> rtnList = new ArrayList<StroomZipRepository>();
+        final List<StroomZipRepository> rtnList = new ArrayList<>();
         if (rolledRepository != null) {
             rtnList.addAll(rolledRepository);
         }
@@ -189,6 +187,10 @@ public class ProxyRepositoryManager implements Runnable {
         }
     }
 
+    public void setRepositoryFormat(final String repositoryFormat) {
+        this.repositoryFormat = repositoryFormat;
+    }
+
     public void setScheduler(final Scheduler scheduler) {
         this.scheduler = scheduler;
     }
@@ -200,10 +202,5 @@ public class ProxyRepositoryManager implements Runnable {
         if (proxyRepository != null) {
             proxyRepository.finish();
         }
-    }
-
-    //setter for spring
-    public void setZipFilenameDelimiter(final String zipFilenameDelimiter) {
-        this.zipFilenameDelimiter = zipFilenameDelimiter;
     }
 }
