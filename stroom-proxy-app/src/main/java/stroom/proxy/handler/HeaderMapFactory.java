@@ -39,7 +39,7 @@ public class HeaderMapFactory {
         if (queryString != null) {
             StringTokenizer st = new StringTokenizer(httpServletRequest.getQueryString(), "&");
             while (st.hasMoreTokens()) {
-                String pair = (String) st.nextToken();
+                String pair = st.nextToken();
                 int pos = pair.indexOf('=');
                 if (pos != -1) {
                     String key = pair.substring(0, pos);

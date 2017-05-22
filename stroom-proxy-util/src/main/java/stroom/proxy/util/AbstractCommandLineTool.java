@@ -60,8 +60,8 @@ public abstract class AbstractCommandLineTool {
 
     private Map<String, String> loadArgs(final String[] args) {
         final Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < args.length; i++) {
-            final String[] split = args[i].split("=");
+        for (final String arg : args) {
+            final String[] split = arg.split("=");
             if (split.length > 1) {
                 map.put(split[0].toLowerCase(), split[1]);
             } else {
