@@ -38,6 +38,8 @@ public class ProxyRepositoryManager implements Runnable {
 
     @StroomStartup(priority = 100)
     public synchronized void start() {
+        LOGGER.info("Using repository format: " + repositoryFormat);
+
         scanForOldRepositories();
 
         // Force the active one to be created
@@ -58,6 +60,11 @@ public class ProxyRepositoryManager implements Runnable {
             rootRepoDir = new File(FileUtil.getTempDir(), "stroom-proxy");
             LOGGER.warn("setRepoDir() - Using temp dir as repoDir is not set. " + rootRepoDir);
         }
+    }
+
+    @Required
+    public void setRepositoryFormat(final String repositoryFormat) {
+        this.repositoryFormat = repositoryFormat;
     }
 
     public void scanForOldRepositories() {
@@ -185,10 +192,6 @@ public class ProxyRepositoryManager implements Runnable {
         if (StringUtils.hasText(simpleCron)) {
             this.scheduler = SimpleCron.compile(simpleCron).createScheduler();
         }
-    }
-
-    public void setRepositoryFormat(final String repositoryFormat) {
-        this.repositoryFormat = repositoryFormat;
     }
 
     public void setScheduler(final Scheduler scheduler) {

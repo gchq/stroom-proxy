@@ -16,6 +16,7 @@ import java.util.Properties;
 public class ProxyProperties {
     public final static String REMOTING_URL = "remotingUrl";
     public final static String REPO_DIR = "repoDir";
+    private final static String REPOSITORY_FORMAT = "repositoryFormat";
     public final static String DB_REQUEST_VALIDATOR_JNDI_NAME = "dbRequestValidatorJndiName";
     public final static String LOG_REQUEST = "logRequest";
     public final static String FORWARD_URL = "forwardUrl";
@@ -28,7 +29,6 @@ public class ProxyProperties {
     private final static String ROLL_CRON = "rollCron";
     private final static String READ_CRON = "readCron";
     private final static String MAX_AGGREGATION = "maxAggregation";
-    private final static String REPOSITORY_FORMAT = "repositoryFormat";
 
     private final static String REQUEST_DELAY_MS = "requestDelayMs";
     private final static String FORWARD_DELAY_MS = "forwardDelayMs";
@@ -53,7 +53,7 @@ public class ProxyProperties {
 
     static {
         propertyDescriptionMap.put(FORWARD_URL,
-                "Optional The URL's to forward onto" + " This is pass-through mode if repoDir is not set");
+                "Optional The URL's to forward onto. This is pass-through mode if repoDir is not set");
 
         propertyDescriptionMap.put(FORWARD_THREAD_COUNT, "Number of threads to forward with");
 
@@ -84,17 +84,9 @@ public class ProxyProperties {
         propertyDescriptionMap.put(REPO_DIR,
                 "Optional Repository DIR. " + "If set any incoming request will be written to the file system.");
 
-        propertyDescriptionMap.put(ROLL_CRON, "Interval to roll any writing repositories.");
-
-        propertyDescriptionMap.put(READ_CRON,
-                "Cron style interval (e.g. every hour '0 * *', every half hour '0,30 * *') to read any ready " +
-                        "repositories (if not defined we read all the time).");
-
-        propertyDescriptionMap.put(MAX_AGGREGATION, "Aggregate size to break at when building an aggregate.");
-
         propertyDescriptionMap.put(REPOSITORY_FORMAT,
                 "Optionally supply a template for naming the files in the repository. This can be specified using multiple replacement variables.\n" +
-                        "The standard template is '${pathId}/{$id}' and will be used if this property is not set.\n" +
+                        "The standard template is '${pathId}/${id}' and will be used if this property is not set.\n" +
                         "This pattern will produce the following paths for the following identities:\n" +
                         "\t1 = 001.zip\n" +
                         "\t100 = 100.zip\n" +
@@ -104,6 +96,14 @@ public class ProxyProperties {
                         "Other replacement variables can be used to in the template including header meta data parameters (e.g. '${feed}') and time based parameters (e.g. '${year}').\n" +
                         "Replacement variables that cannot be resolved will be output as '_'.\n" +
                         "Please ensure that all templates include the '${id}' replacement variable at the start of the file name, failure to do this will result in an invalid repository.");
+
+        propertyDescriptionMap.put(ROLL_CRON, "Interval to roll any writing repositories.");
+
+        propertyDescriptionMap.put(READ_CRON,
+                "Cron style interval (e.g. every hour '0 * *', every half hour '0,30 * *') to read any ready " +
+                        "repositories (if not defined we read all the time).");
+
+        propertyDescriptionMap.put(MAX_AGGREGATION, "Aggregate size to break at when building an aggregate.");
 
         propertyDescriptionMap.put(MAX_FILE_SCAN,
                 "Max number of files to scan over during forwarding.  Once this limit is it it will wait until next " +

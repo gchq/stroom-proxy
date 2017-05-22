@@ -91,6 +91,8 @@ public class StroomZipRepository {
             this.repositoryFormat = DEFAULT_REPOSITORY_FORMAT;
 
         } else {
+            LOGGER.info("Using repository format: " + repositoryFormat);
+
             // Validate the proxy repository format.
             final int index = repositoryFormat.indexOf(ID_VAR);
             if (index == -1) {

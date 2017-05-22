@@ -37,4 +37,4 @@ docker build ${proxyArg1} ${proxyArg2} --tag=stroom-proxy:latest target/stroom-p
 
 #This command assumes that the database jdbc url, username and password are all defined in properties in ~/.stroom/stroom.conf else
 #add something like the following to the run comman
-docker run -p 8080:8080 --name=stroom-proxy -eSTROOM_PROXY_TYPE="store"
+docker run -p 8080:8080 --name=stroom-proxy -e STROOM_PROXY_MODE="store" stroom-proxy

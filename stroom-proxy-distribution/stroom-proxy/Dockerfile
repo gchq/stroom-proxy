@@ -14,18 +14,31 @@
 # limitations under the License.
 #**********************************************************************
 
-FROM openjdk:8
+FROM openjdk:8-alpine
 
-ARG STROOM_PROXY_TYPE
+# The mode to run stroom proxy in
+ENV STROOM_PROXY_MODE="store"
 
 # IN_DOCKER tells setup.sh to run Configure without asking for user input, i.e. using defaults.
 ENV IN_DOCKER="true"
 
-RUN mkdir /usr/stroom-app
-ADD . /usr/stroom-app
-WORKDIR /usr/stroom-app
+# Copy the application.
+ADD . /usr/stroom-proxy
 
-RUN ./bin/setup.sh $STROOM_PROXY_TYPE
+WORKDIR /usr/stroom-proxy
 
+# update alpine and install Bash as it is not in alpine by default
+# then run setup to configure the tomcat instance
+RUN echo "http_proxy: $http_proxy" && \
+    echo "https_proxy: $https_proxy" && \
+    apk update && \
+    apk upgrade && \
+    apk add --no-cache bash && \
+    rm -rf /var/cache/apk/* && \
+    ./bin/setup.sh $STROOM_PROXY_MODE
+
+# export 8080 for stroom proxy to listen on
 EXPOSE 8080
+
+# start Stroom and tail the log file
 CMD ./bin/start.sh && mkdir -p ./instance/logs && touch ./instance/logs/stroom.log && tail -f ./instance/logs/stroom.log

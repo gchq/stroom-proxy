@@ -20,7 +20,7 @@
   <parameter>
     <description>Stroom Proxy Repository Format</description>
     <name>@@REPO_FORMAT@@</name>
-    <value>${pathId}/{$id}</value>
+    <value>${pathId}/${id}</value>
   </parameter>
   <parameter>
     <description>Optional tomcat JVM settings</description>

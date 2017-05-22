@@ -15,8 +15,8 @@
 
     <bean name="proxyRepositoryManager" class="stroom.proxy.repo.ProxyRepositoryManager">
         <property name="repoDir" value="${repoDir}"/>
-        <property name="simpleCron" value="${rollCron}"/>
         <property name="repositoryFormat" value="${repositoryFormat}"/>
+        <property name="simpleCron" value="${rollCron}"/>
     </bean>
 
     <bean class="stroom.proxy.util.spring.ListMerge">
