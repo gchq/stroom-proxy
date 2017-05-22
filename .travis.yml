@@ -43,7 +43,12 @@ script: ./gradlew clean build
 #    tags: true
 
 # Cache dependencies to speed up the build
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
     - .autoconf
     - $HOME/.m2
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
