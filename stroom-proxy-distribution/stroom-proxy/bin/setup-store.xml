@@ -18,6 +18,11 @@
     <value>/stroomdata/stroom-proxy</value>
   </parameter>
   <parameter>
+    <description>Stroom Proxy Repository Format</description>
+    <name>@@REPO_FORMAT@@</name>
+    <value>${pathId}/{$id}</value>
+  </parameter>
+  <parameter>
     <description>JDBC class name</description>
     <name>@@JDBC_CLASSNAME@@</name>
     <value>com.mysql.jdbc.Driver</value>

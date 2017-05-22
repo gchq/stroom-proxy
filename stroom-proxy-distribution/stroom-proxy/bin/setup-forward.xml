@@ -18,6 +18,11 @@
     <value>/stroomdata/stroom-proxy</value>
   </parameter>
   <parameter>
+    <description>Stroom Proxy Repository Format</description>
+    <name>@@REPO_FORMAT@@</name>
+    <value>${pathId}/{$id}</value>
+  </parameter>
+  <parameter>
     <description>Server to forward data on to</description>
     <name>@@FORWARD_SERVER@@</name>
     <value>hostname</value>

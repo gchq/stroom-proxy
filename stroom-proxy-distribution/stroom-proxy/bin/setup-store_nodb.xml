@@ -18,6 +18,11 @@
     <value>/stroomdata/stroom-proxy</value>
   </parameter>
   <parameter>
+    <description>Stroom Proxy Repository Format</description>
+    <name>@@REPO_FORMAT@@</name>
+    <value>${pathId}/{$id}</value>
+  </parameter>
+  <parameter>
     <description>Optional tomcat JVM settings</description>
     <name>@@JAVA_OPTS@@</name>
     <value>-Xms512m -Xmx1g</value>
