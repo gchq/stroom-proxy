@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Issue **#15** : Removed default memory options from env.sh.
+
 ## [v5.1-beta.4] - 2017-05-22
 
 * Issue **#109** : Added packetSize="65536" property to AJP connector in server.xml template.
