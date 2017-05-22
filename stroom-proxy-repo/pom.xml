@@ -4,7 +4,7 @@
   <parent>
     <groupId>stroom-proxy</groupId>
     <artifactId>stroom-proxy</artifactId>
-    <version>5.1-beta.4-SNAPSHOT</version>
+    <version>5.1-beta.4</version>
   </parent>
 
   <artifactId>stroom-proxy-repo</artifactId>
