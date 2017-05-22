@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#15** : Removed default memory options from env.sh.
 
+* Issue **#16** : Proxy now prompts for the repository format during setup.
+
 ## [v5.1-beta.4] - 2017-05-22
 
 * Issue **#109** : Added packetSize="65536" property to AJP connector in server.xml template.
