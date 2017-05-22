@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package stroom.proxy.repo;
+package stroom.util.shared;
 
 import java.util.Comparator;
 
-final class ModelStringUtil {
+public final class ModelStringUtil {
     private static final int METRIC_DIV = 1000;
     private static final int IEC_BYTE_DIV = 1024;
 
@@ -72,7 +72,7 @@ final class ModelStringUtil {
      * @param in     string
      * @return padded value.
      */
-    static String zeroPad(final int amount, final String in) {
+    public static String zeroPad(final int amount, final String in) {
         final int left = amount - in.length();
         final StringBuilder out = new StringBuilder();
         for (int i = 0; i < left; i++) {
@@ -85,7 +85,7 @@ final class ModelStringUtil {
     /**
      * Return nice string like "25 B", "4 kB", "45 MB", etc.
      */
-    static String formatMetricByteSizeString(final Long streamSize) {
+    public static String formatMetricByteSizeString(final Long streamSize) {
         if (streamSize == null) {
             return "";
         }
@@ -95,14 +95,14 @@ final class ModelStringUtil {
     /**
      * Return nice string like "25 B", "4 K", "45 M", etc.
      */
-    static String formatIECByteSizeString(final Long streamSize) {
+    public static String formatIECByteSizeString(final Long streamSize) {
         if (streamSize == null) {
             return "";
         }
         return formatNumberString(streamSize, IEC_BYTE_SIZE_DIVIDER);
     }
 
-    static String formatDurationString(final Long ms) {
+    public static String formatDurationString(final Long ms) {
         if (ms == null) {
             return "";
         }
@@ -139,23 +139,23 @@ final class ModelStringUtil {
         return String.valueOf(nextNumber);
     }
 
-    static Long parseNumberString(final String str) throws NumberFormatException {
+    public static Long parseNumberString(final String str) throws NumberFormatException {
         return parseNumberString(str, SIZE_DIVIDER);
     }
 
-    static Long parseMetricByteSizeString(final String str) throws NumberFormatException {
+    public static Long parseMetricByteSizeString(final String str) throws NumberFormatException {
         return parseNumberString(str, METRIC_BYTE_SIZE_DIVIDER);
     }
 
-    static Long parseIECByteSizeString(final String str) throws NumberFormatException {
+    public static Long parseIECByteSizeString(final String str) throws NumberFormatException {
         return parseNumberString(str, IEC_BYTE_SIZE_DIVIDER);
     }
 
-    static Long parseDurationString(final String str) throws NumberFormatException {
+    public static Long parseDurationString(final String str) throws NumberFormatException {
         return parseNumberString(str, TIME_SIZE_DIVIDER);
     }
 
-    static Integer parseNumberStringAsInt(final String str) throws NumberFormatException {
+    public static Integer parseNumberStringAsInt(final String str) throws NumberFormatException {
         final Long num = parseNumberString(str, SIZE_DIVIDER);
         if (num == null) {
             return null;
@@ -171,13 +171,13 @@ final class ModelStringUtil {
         return num.intValue();
     }
 
-//    public static String format(final HasDisplayValue hasDisplayValue) {
-//        if (hasDisplayValue == null) {
-//            return "";
-//        } else {
-//            return hasDisplayValue.getDisplayValue();
-//        }
-//    }
+    public static String format(final HasDisplayValue hasDisplayValue) {
+        if (hasDisplayValue == null) {
+            return "";
+        } else {
+            return hasDisplayValue.getDisplayValue();
+        }
+    }
 
     private static Long parseNumberString(String str, final Divider[] dividers) throws NumberFormatException {
         if (str == null) {
@@ -233,7 +233,7 @@ final class ModelStringUtil {
 
     }
 
-    static String formatCsv(final Number number) {
+    public static String formatCsv(final Number number) {
         if (number == null) {
             return "";
         }
@@ -241,7 +241,7 @@ final class ModelStringUtil {
 
     }
 
-    static String formatCsv(final Long number) {
+    public static String formatCsv(final Long number) {
         if (number == null) {
             return "";
         }
@@ -259,7 +259,7 @@ final class ModelStringUtil {
         return sb.toString();
     }
 
-    static String toCamelCase(final String string) {
+    public static String toCamelCase(final String string) {
         final char[] chars = string.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             final char c = chars[i];
@@ -280,7 +280,7 @@ final class ModelStringUtil {
         return new String(chars);
     }
 
-    static String toDisplayValue(final String string) {
+    public static String toDisplayValue(final String string) {
         if (string == null) {
             return "null";
         }
@@ -303,7 +303,7 @@ final class ModelStringUtil {
         return new String(output, 0, j);
     }
 
-    static Comparator<String> pathComparator() {
+    public static Comparator<String> pathComparator() {
         return (o1, o2) -> {
             final int min = Math.min(o1.length(), o2.length());
             for (int i = 0; i < min; i++) {

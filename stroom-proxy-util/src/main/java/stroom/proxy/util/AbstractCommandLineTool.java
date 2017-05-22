@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package stroom.proxy.util;
 
 import org.apache.commons.lang.StringUtils;
@@ -8,9 +24,7 @@ import java.beans.PropertyDescriptor;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Base class for command line tools that handles setting a load of args on the
@@ -24,7 +38,7 @@ public abstract class AbstractCommandLineTool {
         }
     }
 
-    private Map<String, String> map;
+    private CIStringHashMap map;
     private List<String> validArguments;
     private int maxPropLength = 0;
 
@@ -38,8 +52,8 @@ public abstract class AbstractCommandLineTool {
     }
 
     public void init(final String[] args) throws Exception {
-        validArguments = new ArrayList<>();
         map = loadArgs(args);
+        validArguments = new ArrayList<>();
 
         final BeanInfo beanInfo = Introspector.getBeanInfo(this.getClass());
 
@@ -58,14 +72,14 @@ public abstract class AbstractCommandLineTool {
         checkArgs();
     }
 
-    private Map<String, String> loadArgs(final String[] args) {
-        final Map<String, String> map = new HashMap<>();
+    private CIStringHashMap loadArgs(final String[] args) {
+        final CIStringHashMap map = new CIStringHashMap();
         for (final String arg : args) {
             final String[] split = arg.split("=");
             if (split.length > 1) {
-                map.put(split[0].toLowerCase(), split[1]);
+                map.put(split[0], split[1]);
             } else {
-                map.put(split[0].toLowerCase(), "");
+                map.put(split[0], "");
             }
         }
         return map;
@@ -73,18 +87,17 @@ public abstract class AbstractCommandLineTool {
 
     private Object getAsType(final PropertyDescriptor descriptor) {
         final Class<?> propertyClass = descriptor.getPropertyType();
-        final String propertyName = descriptor.getName().toLowerCase();
         if (propertyClass.equals(String.class)) {
-            return map.get(propertyName);
+            return map.get(descriptor.getName());
         }
         if (propertyClass.equals(Boolean.class) || propertyClass.equals(Boolean.TYPE)) {
-            return Boolean.parseBoolean(map.get(propertyName));
+            return Boolean.parseBoolean(map.get(descriptor.getName()));
         }
         if (propertyClass.equals(Integer.class) || propertyClass.equals(Integer.TYPE)) {
-            return Integer.parseInt(map.get(propertyName));
+            return Integer.parseInt(map.get(descriptor.getName()));
         }
         if (propertyClass.equals(Long.class) || propertyClass.equals(Long.TYPE)) {
-            return Long.parseLong(map.get(propertyName));
+            return Long.parseLong(map.get(descriptor.getName()));
         }
         throw new RuntimeException("AbstractCommandLineTool does not know about properties of type " + propertyClass);
     }
@@ -109,7 +122,7 @@ public abstract class AbstractCommandLineTool {
             if (pd.getWriteMethod() != null) {
                 // Simple getter ?
                 String suffix = " (default)";
-                if (map.containsKey(pd.getName().toLowerCase())) {
+                if (map.containsKey(pd.getName())) {
                     suffix = " (arg)";
                 }
                 String value = "";

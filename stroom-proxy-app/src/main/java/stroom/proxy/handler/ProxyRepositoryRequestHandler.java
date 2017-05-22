@@ -2,7 +2,7 @@ package stroom.proxy.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.proxy.repo.HeaderMap;
+import stroom.feed.MetaMap;
 import stroom.proxy.repo.ProxyRepositoryManager;
 import stroom.proxy.repo.StroomZipEntry;
 import stroom.proxy.repo.StroomZipOutputStream;
@@ -19,7 +19,7 @@ public class ProxyRepositoryRequestHandler implements RequestHandler {
     @Resource
     ProxyRepositoryManager proxyRepositoryManager;
     @Resource
-    HeaderMap headerMap;
+    MetaMap metaMap;
 
     private StroomZipOutputStream stroomZipOutputStream;
     private OutputStream entryStream;
@@ -48,7 +48,7 @@ public class ProxyRepositoryRequestHandler implements RequestHandler {
     @Override
     public void handleFooter() throws IOException {
         if (doneOne) {
-            stroomZipOutputStream.addMissingMetaMap(headerMap);
+            stroomZipOutputStream.addMissingMetaMap(metaMap);
             stroomZipOutputStream.close();
         } else {
             stroomZipOutputStream.closeDelete();
@@ -58,7 +58,7 @@ public class ProxyRepositoryRequestHandler implements RequestHandler {
 
     @Override
     public void handleHeader() throws IOException {
-        stroomZipOutputStream = proxyRepositoryManager.getActiveRepository().getStroomZipOutputStream(headerMap);
+        stroomZipOutputStream = proxyRepositoryManager.getActiveRepository().getStroomZipOutputStream(metaMap);
     }
 
     @Override

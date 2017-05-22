@@ -68,7 +68,7 @@
         <property name="name" value="proxyContext"/>
     </bean>
 
-    <bean id="headerMap" class="stroom.proxy.repo.HeaderMap" scope="thread" lazy-init="true"/>
+    <bean id="metaMap" class="stroom.feed.MetaMap" scope="thread" lazy-init="true"/>
 
     <!--  Define some custom scopes -->
     <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">

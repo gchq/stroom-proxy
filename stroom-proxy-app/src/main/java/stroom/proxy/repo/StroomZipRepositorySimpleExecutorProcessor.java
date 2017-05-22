@@ -3,6 +3,7 @@ package stroom.proxy.repo;
 import stroom.proxy.util.concurrent.SimpleExecutor;
 import stroom.proxy.util.logging.StroomLogger;
 import stroom.proxy.util.thread.ThreadScopeRunnable;
+import stroom.util.shared.Monitor;
 
 public abstract class StroomZipRepositorySimpleExecutorProcessor extends StroomZipRepositoryProcessor {
     private SimpleExecutor simpleExecutor;

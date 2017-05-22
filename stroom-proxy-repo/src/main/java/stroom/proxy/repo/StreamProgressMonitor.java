@@ -2,6 +2,8 @@ package stroom.proxy.repo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.util.shared.ModelStringUtil;
+import stroom.util.shared.Monitor;
 
 import java.io.IOException;
 

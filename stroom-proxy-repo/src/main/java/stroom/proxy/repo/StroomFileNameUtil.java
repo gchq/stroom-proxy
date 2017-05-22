@@ -2,6 +2,7 @@ package stroom.proxy.repo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.feed.MetaMap;
 
 import java.io.File;
 import java.util.Arrays;
@@ -105,7 +106,7 @@ public final class StroomFileNameUtil {
     }
 
     static String constructFilename(long id, final String template,
-                                    final HeaderMap headerMap,
+                                    final MetaMap metaMap,
                                     String... fileExtensions) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Using" +
@@ -120,7 +121,7 @@ public final class StroomFileNameUtil {
 
         String path = template;
         // Replace path template with header and time values.
-        path = PathCreator.replaceAll(path, headerMap);
+        path = PathCreator.replaceAll(path, metaMap);
         // Replace pathId variable with path id.
         path = PathCreator.replace(path, "pathId", pathIdStr);
         // Replace id variable with file id.

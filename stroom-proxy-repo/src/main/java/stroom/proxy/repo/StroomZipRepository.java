@@ -18,6 +18,7 @@ package stroom.proxy.repo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.feed.MetaMap;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -70,7 +71,7 @@ public class StroomZipRepository {
      */
     private Path baseResultantDir;
 
-    StroomZipRepository(final String dir) {
+    public StroomZipRepository(final String dir) {
         this(dir, null, false, DEFAULT_LOCK_AGE_MS);
     }
 
@@ -250,13 +251,13 @@ public class StroomZipRepository {
         return getStroomZipOutputStream(null);
     }
 
-    public StroomZipOutputStream getStroomZipOutputStream(final HeaderMap headerMap)
+    public StroomZipOutputStream getStroomZipOutputStream(final MetaMap metaMap)
             throws IOException {
         if (finish.get()) {
             throw new RuntimeException("No longer allowed to write new streams to a finished repository");
         }
         final String filename = StroomFileNameUtil.constructFilename(fileCount.incrementAndGet(), repositoryFormat,
-                headerMap, ZIP_EXTENSION);
+                metaMap, ZIP_EXTENSION);
         final Path file = baseLockDir.resolve(filename);
 
 
@@ -287,7 +288,7 @@ public class StroomZipRepository {
     }
 
     @SuppressWarnings(value = "DM_DEFAULT_ENCODING")
-    void addErrorMessage(final StroomZipFile zipFile, final String msg, final boolean bad) {
+    public void addErrorMessage(final StroomZipFile zipFile, final String msg, final boolean bad) {
         final Path file = zipFile.getFile();
 
         try {
@@ -445,7 +446,7 @@ public class StroomZipRepository {
     /**
      * Returns a Stream of Paths to repository Zip files. This stream must be closed after use.
      */
-    Stream<Path> walkZipFiles() throws IOException {
+    public Stream<Path> walkZipFiles() throws IOException {
         return walk(ZIP_EXTENSION);
     }
 
@@ -454,7 +455,7 @@ public class StroomZipRepository {
      *
      * @param extension The file extension to filter by.
      */
-    Stream<Path> walk(final String extension) throws IOException {
+    public Stream<Path> walk(final String extension) throws IOException {
         if (getRootDir() == null || !Files.isDirectory(getRootDir())) {
             return Stream.empty();
         }

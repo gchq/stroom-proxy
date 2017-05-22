@@ -1,7 +1,7 @@
 package stroom.proxy.handler;
 
 import org.springframework.util.StringUtils;
-import stroom.proxy.repo.HeaderMap;
+import stroom.feed.MetaMap;
 import stroom.proxy.repo.StroomZipEntry;
 import stroom.proxy.util.logging.StroomLogger;
 import stroom.proxy.util.shared.ModelStringUtil;
@@ -36,7 +36,7 @@ public class ForwardRequestHandler implements RequestHandler, HostnameVerifier {
     private long bytesSent = 0;
 
     @Resource
-    private HeaderMap headerMap;
+    private MetaMap metaMap;
 
     @Resource
     private ForwardRequestHandlerUrlFactory forwardRequestHandlerUrlFactory;
@@ -85,7 +85,7 @@ public class ForwardRequestHandler implements RequestHandler, HostnameVerifier {
             } finally {
                 LOGGER.info("handleFooter() - %s took %s to forward %s response %s - %s", guid,
                         ModelStringUtil.formatDurationString(System.currentTimeMillis() - startTimeMs),
-                        ModelStringUtil.formatIECByteSizeString(bytesSent), responseCode, headerMap);
+                        ModelStringUtil.formatIECByteSizeString(bytesSent), responseCode, metaMap);
                 connection.disconnect();
                 connection = null;
             }
@@ -103,10 +103,10 @@ public class ForwardRequestHandler implements RequestHandler, HostnameVerifier {
     @Override
     public void handleHeader() throws IOException {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("handleHeader() - " + getForwardUrl() + " Sending request " + headerMap);
+            LOGGER.info("handleHeader() - " + getForwardUrl() + " Sending request " + metaMap);
         }
         startTimeMs = System.currentTimeMillis();
-        guid = headerMap.computeIfAbsent(StroomHeaderArguments.GUID, k -> UUID.randomUUID().toString());
+        guid = metaMap.computeIfAbsent(StroomHeaderArguments.GUID, k -> UUID.randomUUID().toString());
 
         URL url = new URL(getForwardUrl());
         connection = (HttpURLConnection) url.openConnection();
@@ -127,7 +127,7 @@ public class ForwardRequestHandler implements RequestHandler, HostnameVerifier {
 
         connection.addRequestProperty(StroomHeaderArguments.COMPRESSION, StroomHeaderArguments.COMPRESSION_ZIP);
 
-        HeaderMap sendHeader = HeaderMapFactory.cloneAllowable(headerMap);
+        MetaMap sendHeader = MetaMapFactory.cloneAllowable(metaMap);
         for (Entry<String, String> entry : sendHeader.entrySet()) {
             connection.addRequestProperty(entry.getKey(), entry.getValue());
         }

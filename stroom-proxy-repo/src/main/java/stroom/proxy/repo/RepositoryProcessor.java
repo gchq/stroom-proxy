@@ -18,6 +18,10 @@ package stroom.proxy.repo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.feed.MetaMap;
+import stroom.util.io.CloseableUtil;
+import stroom.util.shared.ModelStringUtil;
+import stroom.util.shared.Monitor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +41,7 @@ import java.util.stream.Stream;
  * Class that reads a nested directory tree of stroom zip files.
  */
 public abstract class RepositoryProcessor {
-    private final static int DEFAULT_MAX_FILE_SCAN = 10000;
+    public final static int DEFAULT_MAX_FILE_SCAN = 10000;
     private final Logger LOGGER = LoggerFactory.getLogger(RepositoryProcessor.class);
 
     private final static String FEED = "Feed";
@@ -171,12 +175,12 @@ public abstract class RepositoryProcessor {
     }
 
     private String getFeed(final StroomZipRepository stroomZipRepository, final Path path) {
-        final HeaderMap headerMap = getHeaderMap(stroomZipRepository, path);
-        return headerMap.get(FEED);
+        final MetaMap metaMap = getMetaMap(stroomZipRepository, path);
+        return metaMap.get(FEED);
     }
 
-    private HeaderMap getHeaderMap(final StroomZipRepository stroomZipRepository, final Path path) {
-        final HeaderMap headerMap = new HeaderMap();
+    private MetaMap getMetaMap(final StroomZipRepository stroomZipRepository, final Path path) {
+        final MetaMap metaMap = new MetaMap();
         StroomZipFile stroomZipFile = null;
         try {
             stroomZipFile = new StroomZipFile(path);
@@ -190,19 +194,19 @@ public abstract class RepositoryProcessor {
                 if (anyHeaderStream == null) {
                     stroomZipRepository.addErrorMessage(stroomZipFile, "Unable to find header??", true);
                 } else {
-                    headerMap.read(anyHeaderStream, false);
+                    metaMap.read(anyHeaderStream, false);
                 }
             }
         } catch (final IOException ex) {
             // Unable to open file ... must be bad.
             stroomZipRepository.addErrorMessage(stroomZipFile, ex.getMessage(), true);
-            LOGGER.error("getHeaderMap", ex);
+            LOGGER.error("getMetaMap", ex);
 
         } finally {
             CloseableUtil.closeLogAndIngoreException(stroomZipFile);
         }
 
-        return headerMap;
+        return metaMap;
     }
 
     private void addErrorMessage(final StroomZipRepository stroomZipRepository, final Path path, final String msg, final boolean bad) {

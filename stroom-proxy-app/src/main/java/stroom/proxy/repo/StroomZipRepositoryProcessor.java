@@ -18,12 +18,14 @@ package stroom.proxy.repo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.feed.MetaMap;
 import stroom.proxy.handler.StroomStreamHandler;
 import stroom.proxy.util.io.CloseableUtil;
 import stroom.proxy.util.io.InitialByteArrayOutputStream;
 import stroom.proxy.util.io.InitialByteArrayOutputStream.BufferPos;
 import stroom.proxy.util.io.StreamProgressMonitor;
 import stroom.proxy.util.shared.ModelStringUtil;
+import stroom.util.shared.Monitor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,8 +52,6 @@ public abstract class StroomZipRepositoryProcessor extends RepositoryProcessor {
     public StroomZipRepositoryProcessor(final Monitor monitor) {
         super(monitor);
     }
-
-    public abstract void processFeedFiles(StroomZipRepository stroomZipRepository, String feed, List<Path> fileList);
 
     public abstract byte[] getReadBuffer();
 
@@ -154,7 +154,7 @@ public abstract class StroomZipRepositoryProcessor extends RepositoryProcessor {
         }
     }
 
-    public void sendEntry(final List<? extends stroom.proxy.handler.StroomStreamHandler> stroomStreamHandlerList, final HeaderMap headerMap,
+    public void sendEntry(final List<? extends stroom.proxy.handler.StroomStreamHandler> stroomStreamHandlerList, final MetaMap metaMap,
                           final StroomZipEntry targetEntry) throws IOException {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("sendEntry() - " + targetEntry);
@@ -162,12 +162,12 @@ public abstract class StroomZipRepositoryProcessor extends RepositoryProcessor {
         final byte[] data = getReadBuffer();
         for (final stroom.proxy.handler.StroomStreamHandler stroomStreamHandler : stroomStreamHandlerList) {
             if (stroomStreamHandler instanceof stroom.proxy.handler.StroomHeaderStreamHandler) {
-                ((stroom.proxy.handler.StroomHeaderStreamHandler) stroomStreamHandler).handleHeader(headerMap);
+                ((stroom.proxy.handler.StroomHeaderStreamHandler) stroomStreamHandler).handleHeader(metaMap);
             }
             stroomStreamHandler.handleEntryStart(targetEntry);
         }
         final InitialByteArrayOutputStream initialByteArrayOutputStream = new InitialByteArrayOutputStream(data);
-        headerMap.write(initialByteArrayOutputStream, false);
+        metaMap.write(initialByteArrayOutputStream, false);
         final BufferPos bufferPos = initialByteArrayOutputStream.getBufferPos();
         for (final stroom.proxy.handler.StroomStreamHandler stroomStreamHandler : stroomStreamHandlerList) {
             stroomStreamHandler.handleEntryData(bufferPos.getBuffer(), 0, bufferPos.getBufferPos());

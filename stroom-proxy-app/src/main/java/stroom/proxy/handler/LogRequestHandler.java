@@ -1,6 +1,6 @@
 package stroom.proxy.handler;
 
-import stroom.proxy.repo.HeaderMap;
+import stroom.feed.MetaMap;
 import stroom.proxy.repo.StroomZipEntry;
 import stroom.proxy.util.logging.StroomLogger;
 
@@ -12,7 +12,7 @@ public class LogRequestHandler implements RequestHandler {
     private static StroomLogger LOGGER = StroomLogger.getLogger(LogRequestHandler.class);
 
     @Resource
-    HeaderMap headerMap;
+    MetaMap metaMap;
 
     @Resource
     LogRequestConfig logRequestConfig;
@@ -31,7 +31,7 @@ public class LogRequestHandler implements RequestHandler {
                 }
                 builder.append(logKey);
                 builder.append("=");
-                builder.append(headerMap.get(logKey));
+                builder.append(metaMap.get(logKey));
             }
             LOGGER.info(builder.toString());
         }

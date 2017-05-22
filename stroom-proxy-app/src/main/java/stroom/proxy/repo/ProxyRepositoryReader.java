@@ -1,6 +1,7 @@
 package stroom.proxy.repo;
 
 import org.springframework.util.StringUtils;
+import stroom.feed.MetaMap;
 import stroom.proxy.handler.RequestHandler;
 import stroom.proxy.util.date.DateUtil;
 import stroom.proxy.util.io.StreamProgressMonitor;
@@ -9,10 +10,11 @@ import stroom.proxy.util.scheduler.Scheduler;
 import stroom.proxy.util.scheduler.SimpleCron;
 import stroom.proxy.util.spring.StroomShutdown;
 import stroom.proxy.util.spring.StroomStartup;
-import stroom.proxy.util.task.MonitorImpl;
 import stroom.proxy.util.thread.ThreadLocalBuffer;
 import stroom.proxy.util.thread.ThreadScopeContextHolder;
 import stroom.proxy.util.thread.ThreadUtil;
+import stroom.util.shared.Monitor;
+import stroom.util.shared.TerminateHandler;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -223,15 +225,15 @@ public class ProxyRepositoryReader extends StroomZipRepositorySimpleExecutorProc
                     + fileList.size());
         }
 
-        final HeaderMap headerMap = new HeaderMap();
-        headerMap.put(stroom.proxy.handler.StroomHeaderArguments.FEED, feed);
-        headerMap.put(stroom.proxy.handler.StroomHeaderArguments.COMPRESSION, stroom.proxy.handler.StroomHeaderArguments.COMPRESSION_ZIP);
-        headerMap.put(stroom.proxy.handler.StroomHeaderArguments.RECEIVED_PATH, getHostName());
+        final MetaMap metaMap = new MetaMap();
+        metaMap.put(stroom.proxy.handler.StroomHeaderArguments.FEED, feed);
+        metaMap.put(stroom.proxy.handler.StroomHeaderArguments.COMPRESSION, stroom.proxy.handler.StroomHeaderArguments.COMPRESSION_ZIP);
+        metaMap.put(stroom.proxy.handler.StroomHeaderArguments.RECEIVED_PATH, getHostName());
         if (LOGGER.isDebugEnabled()) {
-            headerMap.put(PROXY_FORWARD_ID, String.valueOf(thisPostId));
+            metaMap.put(PROXY_FORWARD_ID, String.valueOf(thisPostId));
         }
 
-        ThreadScopeContextHolder.getContext().put(HeaderMap.NAME, headerMap);
+        ThreadScopeContextHolder.getContext().put(MetaMap.NAME, metaMap);
 
         final List<RequestHandler> requestHandlerList = createOutgoingRequestHandlerList();
 

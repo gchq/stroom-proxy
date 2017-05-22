@@ -44,7 +44,7 @@ public class StroomZipFile implements Closeable {
         return file;
     }
 
-    StroomZipNameSet getStroomZipNameSet() throws IOException {
+    public StroomZipNameSet getStroomZipNameSet() throws IOException {
         if (stroomZipNameSet == null) {
             stroomZipNameSet = new StroomZipNameSet(false);
             Enumeration<ZipArchiveEntry> entryE = getZipFile().getEntries();
@@ -95,12 +95,20 @@ public class StroomZipFile implements Closeable {
         }
     }
 
-    InputStream getInputStream(String baseName, StroomZipFileType fileType) throws IOException {
+    public InputStream getInputStream(String baseName, StroomZipFileType fileType) throws IOException {
         String fullName = getStroomZipNameSet().getName(baseName, fileType);
         if (fullName != null) {
             return getZipFile().getInputStream(getZipFile().getEntry(fullName));
         }
         return null;
+    }
+
+    public boolean containsEntry(String baseName, StroomZipFileType fileType) throws IOException {
+        String fullName = getStroomZipNameSet().getName(baseName, fileType);
+        if (fullName != null) {
+            return getZipFile().getEntry(fullName) != null;
+        }
+        return false;
     }
 
     void renameTo(Path newFileName) throws IOException {

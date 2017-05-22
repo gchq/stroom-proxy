@@ -2,6 +2,7 @@ package stroom.proxy.repo;
 
 import org.junit.Assert;
 import org.junit.Test;
+import stroom.util.io.CloseableUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;

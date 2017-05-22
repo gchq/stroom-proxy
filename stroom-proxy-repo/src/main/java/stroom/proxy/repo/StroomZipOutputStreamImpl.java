@@ -2,6 +2,8 @@ package stroom.proxy.repo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.feed.MetaMap;
+import stroom.util.shared.Monitor;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -114,7 +116,7 @@ public class StroomZipOutputStreamImpl implements StroomZipOutputStream {
     }
 
     @Override
-    public void addMissingMetaMap(final HeaderMap headerMap) throws IOException {
+    public void addMissingMetaMap(final MetaMap metaMap) throws IOException {
         if (stroomZipNameSet == null) {
             throw new RuntimeException("You can only add missing meta data if you are monitoring entries");
 
@@ -122,7 +124,7 @@ public class StroomZipOutputStreamImpl implements StroomZipOutputStream {
         for (final String baseName : stroomZipNameSet.getBaseNameList()) {
             if (stroomZipNameSet.getName(baseName, StroomZipFileType.Meta) == null) {
                 zipOutputStream.putNextEntry(new ZipEntry(baseName + StroomZipFileType.Meta.getExtension()));
-                headerMap.write(zipOutputStream, false);
+                metaMap.write(zipOutputStream, false);
                 zipOutputStream.closeEntry();
             }
         }

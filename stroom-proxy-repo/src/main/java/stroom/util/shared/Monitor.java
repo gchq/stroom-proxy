@@ -1,4 +1,4 @@
-package stroom.proxy.repo;
+package stroom.util.shared;
 
 import java.io.Serializable;
 

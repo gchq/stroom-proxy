@@ -15,7 +15,7 @@ public class StroomZipEntry {
         }
     }
 
-    boolean equalsBaseName(StroomZipEntry other) {
+    public boolean equalsBaseName(StroomZipEntry other) {
         if (this.baseName == null && other.baseName == null) {
             return false;
         }

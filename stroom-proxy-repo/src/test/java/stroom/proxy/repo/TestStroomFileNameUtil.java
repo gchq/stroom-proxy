@@ -2,6 +2,7 @@ package stroom.proxy.repo;
 
 import org.junit.Assert;
 import org.junit.Test;
+import stroom.feed.MetaMap;
 
 public class TestStroomFileNameUtil {
     @Test
@@ -15,9 +16,9 @@ public class TestStroomFileNameUtil {
 
     @Test
     public void testConstructFilename() {
-        HeaderMap headerMap = new HeaderMap();
-        headerMap.put("feed", "myFeed");
-        headerMap.put("var1", "myVar1");
+        MetaMap metaMap = new MetaMap();
+        metaMap.put("feed", "myFeed");
+        metaMap.put("var1", "myVar1");
 
         final String standardTemplate = "${pathId}/${id}";
         final String staticTemplate = "${pathId}/${id} someStaticText";
@@ -26,10 +27,10 @@ public class TestStroomFileNameUtil {
         final String extension1 = ".zip";
         final String extension2 = ".bad";
 
-        Assert.assertEquals("001.zip.bad", StroomFileNameUtil.constructFilename(1, standardTemplate, headerMap, extension1, extension2));
-        Assert.assertEquals("003/003000.zip", StroomFileNameUtil.constructFilename(3000, standardTemplate, headerMap, extension1));
-        Assert.assertEquals("003000_myVar1_myFeed.zip", StroomFileNameUtil.constructFilename(3000, dynamicTemplate, headerMap, extension1));
-        Assert.assertEquals("003/003000_someStaticText.zip", StroomFileNameUtil.constructFilename(3000, staticTemplate, headerMap, extension1));
-        Assert.assertEquals("003/003000_someStaticText", StroomFileNameUtil.constructFilename(3000, staticTemplate, headerMap));
+        Assert.assertEquals("001.zip.bad", StroomFileNameUtil.constructFilename(1, standardTemplate, metaMap, extension1, extension2));
+        Assert.assertEquals("003/003000.zip", StroomFileNameUtil.constructFilename(3000, standardTemplate, metaMap, extension1));
+        Assert.assertEquals("003000_myVar1_myFeed.zip", StroomFileNameUtil.constructFilename(3000, dynamicTemplate, metaMap, extension1));
+        Assert.assertEquals("003/003000_someStaticText.zip", StroomFileNameUtil.constructFilename(3000, staticTemplate, metaMap, extension1));
+        Assert.assertEquals("003/003000_someStaticText", StroomFileNameUtil.constructFilename(3000, staticTemplate, metaMap));
     }
 }

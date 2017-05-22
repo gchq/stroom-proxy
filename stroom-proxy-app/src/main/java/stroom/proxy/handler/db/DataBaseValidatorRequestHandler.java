@@ -10,7 +10,7 @@ import stroom.proxy.handler.LocalFeedService;
 import stroom.proxy.handler.RequestHandler;
 import stroom.proxy.handler.StroomHeaderArguments;
 import stroom.proxy.handler.StroomStreamException;
-import stroom.proxy.repo.HeaderMap;
+import stroom.feed.MetaMap;
 import stroom.proxy.repo.StroomZipEntry;
 import stroom.proxy.util.logging.StroomLogger;
 
@@ -21,19 +21,19 @@ public class DataBaseValidatorRequestHandler implements RequestHandler {
     private final static StroomLogger LOGGER = StroomLogger.getLogger(DataBaseValidatorRequestHandler.class);
 
     @Resource
-    HeaderMap headerMap;
+    MetaMap metaMap;
 
     @Resource
     LocalFeedService localFeedService;
 
     @Override
     public void handleHeader() throws IOException {
-        String feedName = headerMap.get(StroomHeaderArguments.FEED);
+        String feedName = metaMap.get(StroomHeaderArguments.FEED);
         if (feedName == null) {
             throw new StroomStreamException(StroomStatusCode.FEED_MUST_BE_SPECIFIED);
         }
 
-        String senderDn = headerMap.get(StroomHeaderArguments.REMOTE_DN);
+        String senderDn = metaMap.get(StroomHeaderArguments.REMOTE_DN);
         GetFeedStatusRequest request = new GetFeedStatusRequest(feedName, senderDn);
         GetFeedStatusResponse response = localFeedService.getFeedStatus(request);
 

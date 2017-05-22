@@ -3,6 +3,7 @@ package stroom.proxy.repo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import stroom.feed.MetaMap;
 import stroom.proxy.handler.MockRequestHandler;
 import stroom.proxy.handler.RequestHandler;
 import stroom.proxy.util.io.CloseableUtil;
@@ -432,18 +433,18 @@ public class TestProxyRepositoryReader extends StroomUnitTest {
     public void testSimpleOneFileTemplated() throws IOException {
         init();
 
-        HeaderMap headerMap = new HeaderMap();
-        headerMap.put("feed", "myFeed");
-        headerMap.put("key1", "myKey1");
-        headerMap.put("key2", "myKey2");
-        headerMap.put("key3", "myKey3");
+        MetaMap metaMap = new MetaMap();
+        metaMap.put("feed", "myFeed");
+        metaMap.put("key1", "myKey1");
+        metaMap.put("key2", "myKey2");
+        metaMap.put("key3", "myKey3");
 
-        // template should be case insensitive as far as key names go as the headermap is case insensitive
+        // template should be case insensitive as far as key names go as the metamap is case insensitive
         final String repositoryFormat = "${id}_${FEED}_${key2}_${kEy1}_${keyNotInMeta}_${Key3}";
         proxyRepositoryManager.setRepositoryFormat(repositoryFormat);
         final StroomZipRepository proxyRepository = proxyRepositoryManager.getActiveRepository();
 
-        final StroomZipOutputStream stroomZipOutputStream = proxyRepository.getStroomZipOutputStream(headerMap);
+        final StroomZipOutputStream stroomZipOutputStream = proxyRepository.getStroomZipOutputStream(metaMap);
 
         StroomZipOutputStreamUtil.addSimpleEntry(stroomZipOutputStream, StroomZipFile.SINGLE_META_ENTRY,
                 "Feed:TEST\nGUID:Z1\n".getBytes(StreamUtil.DEFAULT_CHARSET));
@@ -486,17 +487,17 @@ public class TestProxyRepositoryReader extends StroomUnitTest {
     public void testSimpleOneFileEmptyTemplate() throws IOException {
         init();
 
-        HeaderMap headerMap = new HeaderMap();
-        headerMap.put("feed", "myFeed");
-        headerMap.put("key1", "myKey1");
-        headerMap.put("key2", "myKey2");
-        headerMap.put("key3", "myKey3");
+        MetaMap metaMap = new MetaMap();
+        metaMap.put("feed", "myFeed");
+        metaMap.put("key1", "myKey1");
+        metaMap.put("key2", "myKey2");
+        metaMap.put("key3", "myKey3");
 
-        //template should be case insensitive as far as key names go as the headermap is case insensitive
+        //template should be case insensitive as far as key names go as the metamap is case insensitive
         final String repositoryFormat = "";
         proxyRepositoryManager.setRepositoryFormat(repositoryFormat);
         final StroomZipRepository proxyRepository = proxyRepositoryManager.getActiveRepository();
-        final StroomZipOutputStream stroomZipOutputStream = proxyRepository.getStroomZipOutputStream(headerMap);
+        final StroomZipOutputStream stroomZipOutputStream = proxyRepository.getStroomZipOutputStream(metaMap);
 
         StroomZipOutputStreamUtil.addSimpleEntry(stroomZipOutputStream, StroomZipFile.SINGLE_META_ENTRY,
                 "Feed:TEST\nGUID:Z1\n".getBytes(StreamUtil.DEFAULT_CHARSET));

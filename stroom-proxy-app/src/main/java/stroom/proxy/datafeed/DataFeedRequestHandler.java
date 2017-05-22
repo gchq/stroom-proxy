@@ -6,7 +6,7 @@ import stroom.proxy.handler.DropStreamException;
 import stroom.proxy.handler.RequestHandler;
 import stroom.proxy.handler.StroomStreamException;
 import stroom.proxy.handler.StroomStreamProcessor;
-import stroom.proxy.repo.HeaderMap;
+import stroom.feed.MetaMap;
 import stroom.proxy.util.ProxyProperties;
 import stroom.proxy.util.io.CloseableUtil;
 import stroom.proxy.util.logging.StroomLogger;
@@ -36,7 +36,7 @@ public class DataFeedRequestHandler implements HttpRequestHandler, InitializingB
     private static StroomLogger LOGGER = StroomLogger.getLogger(DataFeedRequestHandler.class);
 
     @Resource
-    HeaderMap headerMap;
+    MetaMap metaMap;
 
     @Resource
     ProxyHandlerFactory proxyHandlerFactory;
@@ -65,7 +65,7 @@ public class DataFeedRequestHandler implements HttpRequestHandler, InitializingB
         new ThreadScopeRunnable() {
             @Override
             protected void exec() {
-                ThreadScopeContextHolder.getContext().put(HeaderMap.NAME, headerMap);
+                ThreadScopeContextHolder.getContext().put(MetaMap.NAME, metaMap);
 
                 // Send the data
                 final List<RequestHandler> handlers = proxyHandlerFactory.getIncomingRequestHandlerList();
@@ -74,7 +74,7 @@ public class DataFeedRequestHandler implements HttpRequestHandler, InitializingB
                 final long startTime = System.currentTimeMillis();
 
                 try {
-                    final StroomStreamProcessor stroomStreamProcessor = new StroomStreamProcessor(headerMap, handlers,
+                    final StroomStreamProcessor stroomStreamProcessor = new StroomStreamProcessor(metaMap, handlers,
                             proxyRequestThreadLocalBuffer.getBuffer(), "DataFeedRequestHandler");
 
                     stroomStreamProcessor.processRequestHeader(httpServletRequest);
@@ -91,7 +91,7 @@ public class DataFeedRequestHandler implements HttpRequestHandler, InitializingB
                     httpServletResponse.setStatus(HttpServletResponse.SC_OK);
                 } catch (final Exception s) {
                     try {
-                        handleException(handlers, s, headerMap);
+                        handleException(handlers, s, metaMap);
                     } catch (final IOException ioEx) {
                         throw new RuntimeException(ioEx);
                     }
@@ -101,7 +101,7 @@ public class DataFeedRequestHandler implements HttpRequestHandler, InitializingB
                     final long time = System.currentTimeMillis() - startTime;
                     LOGGER.info("\"doPost() - Took %s to process (concurrentRequestCount=%s) %s\",%s",
                             ModelStringUtil.formatDurationString(time), concurrentRequestCount, returnCode,
-                            CSVFormatter.format(headerMap));
+                            CSVFormatter.format(metaMap));
                 }
                 concurrentRequestCount.decrementAndGet();
 
@@ -112,7 +112,7 @@ public class DataFeedRequestHandler implements HttpRequestHandler, InitializingB
     /**
      * Let all the handlers have a go with the exception.
      */
-    private void handleException(final List<RequestHandler> handlers, final Exception ex, final HeaderMap headerMap)
+    private void handleException(final List<RequestHandler> handlers, final Exception ex, final MetaMap metaMap)
             throws IOException {
         boolean error = true;
         if (ex instanceof DropStreamException) {
@@ -122,14 +122,14 @@ public class DataFeedRequestHandler implements HttpRequestHandler, InitializingB
                 ;
             CloseableUtil.close(inputStream);
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-            LOGGER.warn("\"handleException() - Dropped stream\",%s", CSVFormatter.format(headerMap));
+            LOGGER.warn("\"handleException() - Dropped stream\",%s", CSVFormatter.format(metaMap));
             error = false;
         } else {
             if (ex instanceof StroomStreamException) {
-                LOGGER.warn("\"handleException()\",%s,\"%s\"", CSVFormatter.format(headerMap),
+                LOGGER.warn("\"handleException()\",%s,\"%s\"", CSVFormatter.format(metaMap),
                         CSVFormatter.escape(ex.getMessage()));
             } else {
-                LOGGER.error("\"handleException()\",%s", CSVFormatter.format(headerMap), ex);
+                LOGGER.error("\"handleException()\",%s", CSVFormatter.format(metaMap), ex);
             }
         }
         for (final RequestHandler requestHandler : handlers) {
