@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v5.1-beta.5] - 2017-05-22
+
 * Issue **#15** : Removed default memory options from env.sh.
 
 * Issue **#16** : Proxy now prompts for the repository format during setup.
@@ -30,5 +32,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
-[Unreleased]: https://github.com/gchq/stroom/compare/v5.1-beta.4...HEAD
-[v5.1-beta.4]: https://github.com/gchq/stroom/compare/v5.1-beta.4
+[Unreleased]: https://github.com/gchq/stroom/compare/v5.1-beta.5...HEAD
+[v5.1-beta.5]: https://github.com/gchq/stroom/compare/v5.1-beta.4...v5.1-beta.5
+[v5.1-beta.4]: https://github.com/gchq/stroom/releases/tag/v5.1-beta.4
