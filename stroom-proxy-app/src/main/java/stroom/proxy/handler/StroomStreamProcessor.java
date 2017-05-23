@@ -1,12 +1,11 @@
 package stroom.proxy.handler;
 
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.springframework.util.StringUtils;
-import stroom.proxy.StroomStatusCode;
 import stroom.feed.MetaMap;
+import stroom.proxy.StroomStatusCode;
 import stroom.proxy.repo.StroomZipEntry;
 import stroom.proxy.repo.StroomZipFile;
 import stroom.proxy.repo.StroomZipFileType;

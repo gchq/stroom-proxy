@@ -1,6 +1,7 @@
 apply plugin: 'war'
 
 dependencies {
+    compile project(':stroom-proxy-repo')
     compile project(':stroom-proxy-util')
     compile project(':stroom-proxy-remote')
 
