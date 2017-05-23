@@ -9,16 +9,32 @@ dependencies {
 }
 
 task distZip(type: Zip) {
-    from(fileTree(new File(project(':stroom-proxy-app').buildDir, 'libs')).include('*.war')) {
+    from('.') {
+        include('stroom-proxy/**')
+        exclude('**/*.sh')
+        exclude('**/.*')
+        dirMode = 0750
+        fileMode = 0640
+    }
+
+    from('.') {
+        include('stroom-proxy/**/*.sh')
+        exclude('**/dev*.sh')
+        dirMode = 0750
+        fileMode = 0750
+    }
+
+    from(fileTree(new File(project(':stroom-proxy-app').buildDir, 'libs'))) {
         into 'stroom-proxy/lib'
+        include('*.war')
+        dirMode = 0750
+        fileMode = 0640
     }
 
     from (configurations.runtime) {
         into 'stroom-proxy/lib'
-    }
-
-    from('src/main/dist') {
-        into 'stroom-proxy'
+        dirMode = 0750
+        fileMode = 0640
     }
 }
 
