@@ -1,23 +1,23 @@
 #!/bin/sh
 
-echo "Clearing out target/stroom-proxy"
-rm -rf ./target/stroom-proxy
+echo "Clearing out build/distributions/stroom-proxy"
+rm -rf ./build/distributions/stroom-proxy
 
 echo "unzipping distribution"
-distFile=target/stroom-proxy-distribution-*-bin.zip
+distFile=./build/distributions/stroom-proxy-distribution-*.zip
 if [ ! -f $distFile ]; then
     echo "No distribution zip file present"
     exit 1
 fi
 
-unzip $distFile -d target
+unzip $distFile -d ./build/distributions
 
-#stop/remove any existing containers/images
+# Stop/remove any existing containers/images
 docker stop stroom-proxy
 docker rm stroom-proxy
 docker rmi stroom-proxy
 
-#Allow for running behind a proxy or not
+# Allow for running behind a proxy or not
 if [ -z $HTTP_PROXY ]; then
     proxyArg1=""
 else
@@ -33,8 +33,7 @@ fi
 echo "proxyArg1: $proxyArg1"
 echo "proxyArg2: $proxyArg2"
 
-docker build ${proxyArg1} ${proxyArg2} --tag=stroom-proxy:latest target/stroom-proxy
+docker build ${proxyArg1} ${proxyArg2} --tag=stroom-proxy:latest build/distributions/stroom-proxy
 
-#This command assumes that the database jdbc url, username and password are all defined in properties in ~/.stroom/stroom.conf else
-#add something like the following to the run comman
+# Run the image in store mode
 docker run -p 8080:8080 --name=stroom-proxy -e STROOM_PROXY_MODE="store" stroom-proxy
