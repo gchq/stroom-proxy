@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+Issue #17 : Fixed old repository scanning bug on restart.
+
 ## [v5.1-beta.5] - 2017-05-22
 
 * Issue **#15** : Removed default memory options from env.sh.
