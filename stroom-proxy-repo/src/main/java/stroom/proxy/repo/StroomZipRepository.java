@@ -27,6 +27,7 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -330,13 +331,15 @@ public class StroomZipRepository {
     private void clean(final Path path) {
         try {
             if (Files.isDirectory(path)) {
+                final long tenSecondsAgoMs = System.currentTimeMillis() - TEN_SECONDS;
+                final long oldestLockFileMs = System.currentTimeMillis() - lockDeleteAgeMs;
+
                 try (final Stream<Path> stream = Files.walk(path)) {
                     stream.sorted(Comparator.reverseOrder()).forEach(p -> {
                         try {
                             if (p.toString().endsWith(".zip.lock")) {
-                                final long oldestTimeMs = System.currentTimeMillis() - lockDeleteAgeMs;
-                                final long lastModMs = Files.getLastModifiedTime(p).toMillis();
-                                if (lastModMs < oldestTimeMs) {
+                                final FileTime lastModified = getLastModifiedTime(p);
+                                if (lastModified != null && lastModified.toMillis() < oldestLockFileMs) {
                                     try {
                                         Files.delete(p);
                                         LOGGER.info("Removed old lock file due to age " + p.toString() + " " + DateUtil.createNormalDateTimeString());
@@ -346,9 +349,8 @@ public class StroomZipRepository {
                                 }
                             } else if (Files.isDirectory(p)) {
                                 // Only try and delete directories that are at least 10 seconds old.
-                                final long oldestTimeMs = System.currentTimeMillis() - TEN_SECONDS;
-                                final long lastModMs = Files.getLastModifiedTime(p).toMillis();
-                                if (lastModMs < oldestTimeMs) {
+                                final FileTime lastModified = getLastModifiedTime(p);
+                                if (lastModified != null && lastModified.toMillis() < tenSecondsAgoMs) {
                                     // Synchronize deletion of directories so that the getStroomOutputStream() method has a
                                     // chance to create dirs and place files inside them before this method cleans them up.
                                     synchronized (StroomZipRepository.this) {
@@ -366,6 +368,16 @@ public class StroomZipRepository {
         } catch (final IOException e) {
             LOGGER.error("Failed to clean repo " + path);
         }
+    }
+
+    private FileTime getLastModifiedTime(final Path path) {
+        try {
+            return Files.getLastModifiedTime(path);
+        } catch (final Exception e) {
+            LOGGER.trace(e.getMessage(), e);
+        }
+
+        return null;
     }
 
     private void removeLock() {
