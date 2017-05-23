@@ -1,0 +1,5 @@
+dependencies {
+    compile project(':stroom-proxy-util')
+
+    compile 'com.caucho:hessian:4.0.38'
+}

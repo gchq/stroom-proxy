@@ -1,0 +1,6 @@
+rootProject.name = 'stroom-proxy'
+
+include 'stroom-proxy-util'
+include 'stroom-proxy-remote'
+include 'stroom-proxy-app'
+include 'stroom-proxy-distribution'

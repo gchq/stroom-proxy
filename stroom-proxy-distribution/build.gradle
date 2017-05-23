@@ -1,0 +1,25 @@
+configurations.all {
+    transitive = false
+}
+
+dependencies {
+    compile project(path: ':stroom-proxy-app')
+    compile project(path: ':stroom-proxy-util')
+    compile 'mysql:mysql-connector-java:5.1.40'
+}
+
+task distZip(type: Zip) {
+    from(fileTree(new File(project(':stroom-proxy-app').buildDir, 'libs')).include('*.war')) {
+        into 'stroom-proxy/lib'
+    }
+
+    from (configurations.runtime) {
+        into 'stroom-proxy/lib'
+    }
+
+    from('src/main/dist') {
+        into 'stroom-proxy'
+    }
+}
+
+build.finalizedBy(distZip)

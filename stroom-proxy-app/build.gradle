@@ -1,0 +1,15 @@
+apply plugin: 'war'
+
+dependencies {
+    compile project(':stroom-proxy-util')
+    compile project(':stroom-proxy-remote')
+
+    providedCompile 'javax.servlet:servlet-api:2.5'
+
+    testCompile project(path: ':stroom-proxy-util', configuration: 'testArtifacts')
+}
+
+war {
+    exclude 'WEB-INF/lib/**'
+    exclude 'WEB-INF/classes/**'
+}

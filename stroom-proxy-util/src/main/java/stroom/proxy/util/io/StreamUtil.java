@@ -15,8 +15,6 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
-
 /**
  * Helper class for resources.
  */
@@ -389,7 +387,7 @@ public final class StreamUtil {
         };
     }
 
-    @SuppressWarnings(value = "DM_DEFAULT_ENCODING", justification = "PrintWriter does not take a charset")
+    @SuppressWarnings(value = "DM_DEFAULT_ENCODING")
     public static String exceptionCallStack(final Throwable throwable) {
         final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         final PrintWriter printWriter = new PrintWriter(byteArrayOutputStream);

@@ -1,6 +1,7 @@
 .idea/
-.DS_Store
 *.iml
+.DS_Store
+.gradle/
 */target/
 *.swp
 target
