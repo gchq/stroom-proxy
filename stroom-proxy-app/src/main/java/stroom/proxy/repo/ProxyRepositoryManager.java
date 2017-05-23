@@ -74,34 +74,39 @@ public class ProxyRepositoryManager implements Runnable {
                 final File file = new File(rootRepoDir, fileName);
                 if (file.isDirectory()) {
                     final String baseName = FileNameUtil.getBaseName(fileName);
-                    // Looks like a date
-                    if (baseName.length() == DateUtil.DATE_LENGTH) {
-                        try {
-                            // Is this DIR an Zulu time stamp ?
-                            DateUtil.parseNormalDateTimeString(baseName);
-                            // YES looking like a repository
-                            final File expectedDir = new File(rootRepoDir, baseName);
 
-                            if (fileName.endsWith(StroomZipRepository.LOCK_EXTENSION)) {
-                                if (!file.renameTo(expectedDir)) {
-                                    LOGGER.warn(
-                                            "scanForOldRepositories() - Failed to rename locked repository " + file);
-                                } else {
-                                    LOGGER.info("scanForOldRepositories() - Unlocking old locked repository "
-                                            + expectedDir);
-                                    rolledRepository.add(new StroomZipRepository(expectedDir.getAbsolutePath(), repositoryFormat, false,
-                                            lockDeleteAgeMs));
-                                }
-                            } else {
-                                LOGGER.info(
-                                        "scanForOldRepositories() - Picking up old rolled repository " + expectedDir);
-                                rolledRepository.add(
-                                        new StroomZipRepository(expectedDir.getAbsolutePath(), repositoryFormat, false, lockDeleteAgeMs));
+                    // Rolled repositories start with a date and we are only rolling repositories if somebody has set
+                    // the rollCron property which creates a scheduler.
+                    if (this.scheduler != null) {
+                        // Looks like a date
+                        if (baseName.length() == DateUtil.DATE_LENGTH) {
+                            long millis = -1;
+                            try {
+                                // Is this directory name an ISO 8601 compliant date?
+                                millis = DateUtil.parseNormalDateTimeString(baseName);
+                            } catch (final Exception e) {
+                                LOGGER.warn("Failed to parse directory that looked like it should be rolled repository: " + file);
                             }
-                        } catch (final IllegalArgumentException pex) {
-                            LOGGER.warn(
-                                    "scanForOldRepositories() - Failed to parse directory that looked like it should be rolled repository "
-                                            + file);
+
+                            // Only proceed if we managed to parse the dir name as a ISO 8601 date.
+                            if (millis > 0) {
+                                // YES looking like a repository
+                                final File expectedDir = new File(rootRepoDir, baseName);
+
+                                if (fileName.endsWith(StroomZipRepository.LOCK_EXTENSION)) {
+                                    if (!file.renameTo(expectedDir)) {
+                                        LOGGER.warn("Failed to rename locked repository: " + file);
+                                    } else {
+                                        LOGGER.info("Unlocking old locked repository: " + expectedDir);
+                                        rolledRepository.add(new StroomZipRepository(expectedDir.getAbsolutePath(), repositoryFormat, false,
+                                                lockDeleteAgeMs));
+                                    }
+                                } else {
+                                    LOGGER.info("Picking up old rolled repository: " + expectedDir);
+                                    rolledRepository.add(
+                                            new StroomZipRepository(expectedDir.getAbsolutePath(), repositoryFormat, false, lockDeleteAgeMs));
+                                }
+                            }
                         }
                     }
                 }
