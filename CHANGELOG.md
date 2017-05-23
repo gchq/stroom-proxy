@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-Issue #17 : Fixed old repository scanning bug on restart.
+* Issue **#17** : Fixed old repository scanning bug on restart.
 
 ## [v5.1-beta.5] - 2017-05-22
 
