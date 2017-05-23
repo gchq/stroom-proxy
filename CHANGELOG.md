@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v5.1-beta.6] - 2017-05-23
+
 * Issue **#17** : Fixed old repository scanning bug on restart.
 
 ## [v5.1-beta.5] - 2017-05-22
@@ -34,6 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
-[Unreleased]: https://github.com/gchq/stroom/compare/v5.1-beta.5...HEAD
+[Unreleased]: https://github.com/gchq/stroom/compare/v5.1-beta.6...HEAD
+[v5.1-beta.6]: https://github.com/gchq/stroom/compare/v5.1-beta.5...v5.1-beta.6
 [v5.1-beta.5]: https://github.com/gchq/stroom/compare/v5.1-beta.4...v5.1-beta.5
 [v5.1-beta.4]: https://github.com/gchq/stroom/releases/tag/v5.1-beta.4
