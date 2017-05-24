@@ -6,7 +6,7 @@ sudo: false
 
 install: echo "skip 'gradle assemble' step to speed up build"
 
-script: ./gradlew clean build 
+script: ./gradlew -Pversion=$TRAVIS_TAG clean build
 
 before_deploy:
   # remove the tests jar to make it easier to pick up the src and classes jars later

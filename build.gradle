@@ -7,7 +7,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     group = 'stroom-proxy'
-    version = '5.1-beta.4-SNAPSHOT'
+    version = "${version}"
 }
 
 subprojects {
