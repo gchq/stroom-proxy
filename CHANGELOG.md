@@ -9,9 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Issue **#21** : Added in runtime dependency on AspectJ.
+
 ## [v5.1-beta.7] - 2017-05-23
 
-gh-19 : Fixed error thrown when attempting to remove transient lock files.
+* Issue **#19** : Fixed error thrown when attempting to remove transient lock files.
 
 ## [v5.1-beta.6] - 2017-05-23
 
