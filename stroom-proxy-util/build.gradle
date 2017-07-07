@@ -1,4 +1,9 @@
 dependencies {
+    compile 'aopalliance:aopalliance:1.0'
+    compile 'org.aspectj:aspectjrt:1.8.9'
+    compile 'org.aspectj:aspectjweaver:1.8.9'
+    compile 'cglib:cglib-nodep:3.1'
+
     compile 'org.apache.commons:commons-compress:1.12'
     compile 'commons-lang:commons-lang:2.6'
     compile 'commons-io:commons-io:2.5'
