@@ -213,7 +213,7 @@ public abstract class RepositoryProcessor {
         StroomZipFile stroomZipFile = null;
         try {
             stroomZipFile = new StroomZipFile(path);
-            stroomZipRepository.addErrorMessage(stroomZipFile, "Unable to find feed in header??", true);
+            stroomZipRepository.addErrorMessage(stroomZipFile, msg, bad);
         } finally {
             CloseableUtil.closeLogAndIngoreException(stroomZipFile);
         }
