@@ -9,9 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-* Issue **#21** : Added in runtime dependency on AspectJ.
+## [v5.1-beta.9] - 2017-07-25
 
 * Issue **#22** : Added ImportKey class back into proxy.
+
+## [v5.1-beta.8] - 2017-07-07
+
+* Issue **#21** : Added in runtime dependency on AspectJ.
 
 ## [v5.1-beta.7] - 2017-05-23
 
@@ -44,7 +48,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
-[Unreleased]: https://github.com/gchq/stroom/compare/v5.1-beta.7...HEAD
+[Unreleased]: https://github.com/gchq/stroom/compare/v5.1-beta.9...HEAD
+[v5.1-beta.9]: https://github.com/gchq/stroom/compare/v5.1-beta.8...v5.1-beta.9
+[v5.1-beta.8]: https://github.com/gchq/stroom/compare/v5.1-beta.7...v5.1-beta.8
 [v5.1-beta.7]: https://github.com/gchq/stroom/compare/v5.1-beta.6...v5.1-beta.7
 [v5.1-beta.6]: https://github.com/gchq/stroom/compare/v5.1-beta.5...v5.1-beta.6
 [v5.1-beta.5]: https://github.com/gchq/stroom/compare/v5.1-beta.4...v5.1-beta.5
