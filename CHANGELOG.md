@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#21** : Added in runtime dependency on AspectJ.
 
+* Issue **#22** : Added ImportKey class back into proxy.
+
 ## [v5.1-beta.7] - 2017-05-23
 
 * Issue **#19** : Fixed error thrown when attempting to remove transient lock files.
