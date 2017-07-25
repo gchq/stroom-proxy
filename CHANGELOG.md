@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v5.1-beta.10] - 2017-07-25
+
+* Issue **#22** : Moved into correct JAR.
+
 ## [v5.1-beta.9] - 2017-07-25
 
 * Issue **#22** : Added ImportKey class back into proxy.
@@ -48,7 +52,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
-[Unreleased]: https://github.com/gchq/stroom/compare/v5.1-beta.9...HEAD
+[Unreleased]: https://github.com/gchq/stroom/compare/v5.1-beta.10...HEAD
+[v5.1-beta.10]: https://github.com/gchq/stroom/compare/v5.1-beta.9...v5.1-beta.10
 [v5.1-beta.9]: https://github.com/gchq/stroom/compare/v5.1-beta.8...v5.1-beta.9
 [v5.1-beta.8]: https://github.com/gchq/stroom/compare/v5.1-beta.7...v5.1-beta.8
 [v5.1-beta.7]: https://github.com/gchq/stroom/compare/v5.1-beta.6...v5.1-beta.7
