@@ -8,7 +8,7 @@ import stroom.proxy.util.logging.StroomLogger;
 public class CloseableUtil {
     static StroomLogger LOGGER = StroomLogger.getLogger(CloseableUtil.class);
 
-    public static void closeLogAndIngoreException(Closeable... closeableList) {
+    public static void closeLogAndIgnoreException(Closeable... closeableList) {
         try {
             close(closeableList);
         } catch (Exception ex) {
