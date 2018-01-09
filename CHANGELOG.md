@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Change docker image to use openjdk:8u151-jre-alpine as a base
+
 * Issue **#21** : Added in runtime dependency on AspectJ.
 
 ## [v5.1-beta.7] - 2017-05-23
