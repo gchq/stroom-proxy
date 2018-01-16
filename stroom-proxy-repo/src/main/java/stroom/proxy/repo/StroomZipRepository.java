@@ -23,7 +23,6 @@ import stroom.feed.MetaMap;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.DirectoryNotEmptyException;
-import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -31,11 +30,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
-import java.util.stream.Stream;
 
 /**
  * Class that represents a repository on the file system. By default files are
@@ -439,11 +436,19 @@ public class StroomZipRepository {
             LOGGER.debug("Attempting to delete dir: " + path.toString());
 
             // Delete all empty sub directories.
-            try (final Stream<Path> stream = Files
-                    .walk(path, FileVisitOption.FOLLOW_LINKS)
-                    .sorted(Comparator.reverseOrder())
-                    .filter(p -> Files.isDirectory(p))) {
-                stream.forEach(this::delete);
+            try {
+                Files.walkFileTree(path, new AbstractFileVisitor() {
+                    @Override
+                    public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) {
+                        try {
+                            Files.delete(dir);
+                        } catch (final IOException e) {
+                            LOGGER.debug(e.getMessage(), e);
+                        }
+
+                        return super.postVisitDirectory(dir, exc);
+                    }
+                });
             } catch (final IOException e) {
                 LOGGER.error(e.getMessage(), e);
             }
