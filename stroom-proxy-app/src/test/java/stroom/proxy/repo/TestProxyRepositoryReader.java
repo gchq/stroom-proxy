@@ -6,6 +6,7 @@ import org.junit.Test;
 import stroom.feed.MetaMap;
 import stroom.proxy.handler.MockRequestHandler;
 import stroom.proxy.handler.RequestHandler;
+import stroom.proxy.repo.StroomZipRepository.ExtensionFileVisitor;
 import stroom.proxy.repo.StroomZipRepository.ZipFileVisitor;
 import stroom.proxy.util.io.CloseableUtil;
 import stroom.proxy.util.io.StreamUtil;
@@ -112,12 +113,12 @@ public class TestProxyRepositoryReader extends StroomUnitTest {
         try {
             final Path path = proxyRepository.getRootDir();
             if (path != null && Files.isDirectory(path)) {
-                Files.walkFileTree(path, new ZipFileVisitor() {
+                Files.walkFileTree(path, new ExtensionFileVisitor(extension) {
                     @Override
                     FileVisitResult matchingFile(final Path file, final BasicFileAttributes attrs) {
                         if (file != null) {
                             final String fileName = file.getFileName().toString();
-                            if (fileName.startsWith(idString) && fileName.endsWith(extension) && !Character.isDigit(fileName.charAt(idString.length()))) {
+                            if (fileName.startsWith(idString) && !Character.isDigit(fileName.charAt(idString.length()))) {
                                 found.set(true);
                                 return FileVisitResult.TERMINATE;
                             }
