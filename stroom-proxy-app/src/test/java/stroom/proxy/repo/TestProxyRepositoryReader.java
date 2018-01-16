@@ -6,6 +6,7 @@ import org.junit.Test;
 import stroom.feed.MetaMap;
 import stroom.proxy.handler.MockRequestHandler;
 import stroom.proxy.handler.RequestHandler;
+import stroom.proxy.repo.StroomZipRepository.ZipFileVisitor;
 import stroom.proxy.util.io.CloseableUtil;
 import stroom.proxy.util.io.StreamUtil;
 import stroom.proxy.util.test.StroomExpectedException;
@@ -15,14 +16,15 @@ import stroom.proxy.util.thread.ThreadLocalBuffer;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Stream;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipException;
 
 public class TestProxyRepositoryReader extends StroomUnitTest {
@@ -107,14 +109,22 @@ public class TestProxyRepositoryReader extends StroomUnitTest {
         final AtomicBoolean found = new AtomicBoolean();
         final String idString = StroomFileNameUtil.idToString(num);
 
-        try (final Stream<Path> stream = proxyRepository.walk(extension)) {
-            final Iterator<Path> iterator = stream.iterator();
-            while (iterator.hasNext() && !found.get()) {
-                final Path p = iterator.next();
-                final String fileName = p.getFileName().toString();
-                if (fileName.startsWith(idString) && fileName.endsWith(extension) && !Character.isDigit(fileName.charAt(idString.length()))) {
-                    found.set(true);
-                }
+        try {
+            final Path path = proxyRepository.getRootDir();
+            if (path != null && Files.isDirectory(path)) {
+                Files.walkFileTree(path, new ZipFileVisitor() {
+                    @Override
+                    FileVisitResult matchingFile(final Path file, final BasicFileAttributes attrs) {
+                        if (file != null) {
+                            final String fileName = file.getFileName().toString();
+                            if (fileName.startsWith(idString) && fileName.endsWith(extension) && !Character.isDigit(fileName.charAt(idString.length()))) {
+                                found.set(true);
+                                return FileVisitResult.TERMINATE;
+                            }
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
             }
         } catch (final IOException e) {
             // Ignore.
@@ -454,13 +464,7 @@ public class TestProxyRepositoryReader extends StroomUnitTest {
         Assert.assertEquals(1, proxyRepository.getFileCount());
         stroomZipOutputStream.close();
 
-        String filename = null;
-        try (final Stream<Path> stream = proxyRepository.walkZipFiles()) {
-            final Iterator<Path> iter = stream.iterator();
-            if (iter.hasNext()) {
-                filename = iter.next().getFileName().toString();
-            }
-        }
+        final String filename = getZipFile(proxyRepository);
 
         Assert.assertEquals("001_myFeed_myKey2_myKey1___myKey3.zip", filename);
 
@@ -507,13 +511,7 @@ public class TestProxyRepositoryReader extends StroomUnitTest {
         Assert.assertEquals(1, proxyRepository.getFileCount());
         stroomZipOutputStream.close();
 
-        String filename = null;
-        try (final Stream<Path> stream = proxyRepository.walkZipFiles()) {
-            final Iterator<Path> iter = stream.iterator();
-            if (iter.hasNext()) {
-                filename = iter.next().getFileName().toString();
-            }
-        }
+        final String filename = getZipFile(proxyRepository);
 
         Assert.assertEquals("001.zip", filename);
 
@@ -534,5 +532,27 @@ public class TestProxyRepositoryReader extends StroomUnitTest {
         proxyRepository.clean();
 
         Assert.assertFalse(isZipFile(proxyRepository, 1));
+    }
+
+    private String getZipFile(final StroomZipRepository proxyRepository) {
+        final AtomicReference<String> filename = new AtomicReference<>();
+        try {
+            final Path path = proxyRepository.getRootDir();
+            if (path != null && Files.isDirectory(path)) {
+                Files.walkFileTree(path, new ZipFileVisitor() {
+                    @Override
+                    FileVisitResult matchingFile(final Path file, final BasicFileAttributes attrs) {
+                        if (file != null) {
+                            filename.set(file.getFileName().toString());
+                            return FileVisitResult.TERMINATE;
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            }
+        } catch (final IOException e) {
+            // Ignore.
+        }
+        return filename.get();
     }
 }

@@ -19,13 +19,17 @@ package stroom.proxy.repo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.feed.MetaMap;
+import stroom.proxy.repo.StroomZipRepository.ZipFileVisitor;
 import stroom.util.io.CloseableUtil;
 import stroom.util.shared.ModelStringUtil;
 import stroom.util.shared.Monitor;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,7 +39,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Class that reads a nested directory tree of stroom zip files.
@@ -77,7 +81,7 @@ public abstract class RepositoryProcessor {
      * file scan limit.
      */
     public final boolean process(final StroomZipRepository stroomZipRepository) {
-        boolean completedAllFiles = true;
+        final AtomicBoolean completedAllFiles = new AtomicBoolean(true);
 
         try {
             if (LOGGER.isDebugEnabled()) {
@@ -91,35 +95,45 @@ public abstract class RepositoryProcessor {
 
             // Scan all of the zip files in the repository so that we can map
             // zip files to feeds.
-            int count = 0;
-            try (final Stream<Path> stream = stroomZipRepository.walkZipFiles().sorted(Comparator.naturalOrder())) {
-                final Iterator<Path> iter = stream.iterator();
-                while (iter.hasNext() && count < maxFileScan) {
-                    final Path path = iter.next();
-                    final Runnable runnable = () -> {
-                        if (!monitor.isTerminated()) {
-                            LOGGER.debug("Processing file: {}", path);
-                            final String feed = getFeed(stroomZipRepository, path);
-                            if (feed == null || feed.length() == 0) {
-                                addErrorMessage(stroomZipRepository, path, "Unable to find feed in header??", true);
+            try {
+                final Path path = stroomZipRepository.getRootDir();
+                if (path != null && Files.isDirectory(path)) {
+                    Files.walkFileTree(path, new ZipFileVisitor() {
+                        int count = 0;
 
-                            } else {
-                                LOGGER.debug("{} belongs to feed {}", path, feed);
-                                // Add the file into the map, creating the list if needs be
-                                feedToFileMap.computeIfAbsent(feed, k -> Collections.synchronizedList(new ArrayList<>())).add(path);
+                        @Override
+                        FileVisitResult matchingFile(final Path file, final BasicFileAttributes attrs) {
+                            if (file != null) {
+                                final Runnable runnable = () -> {
+                                    if (!monitor.isTerminated()) {
+                                        LOGGER.debug("Processing file: {}", file);
+                                        final String feed = getFeed(stroomZipRepository, file);
+                                        if (feed == null || feed.length() == 0) {
+                                            addErrorMessage(stroomZipRepository, file, "Unable to find feed in header??", true);
+
+                                        } else {
+                                            LOGGER.debug("{} belongs to feed {}", file, feed);
+                                            // Add the file into the map, creating the list if needs be
+                                            feedToFileMap.computeIfAbsent(feed, k -> Collections.synchronizedList(new ArrayList<>())).add(file);
+                                        }
+                                    } else {
+                                        LOGGER.info("Quit processing at: {}", file);
+                                    }
+                                };
+
+                                execute(file.toAbsolutePath().toString(), runnable);
+                                count++;
+
+                                if (count > maxFileScan) {
+                                    completedAllFiles.set(false);
+                                    LOGGER.debug("Hit scan limit of {}", maxFileScan);
+                                    return FileVisitResult.TERMINATE;
+                                }
                             }
-                        } else {
-                            LOGGER.info("Quit processing at: {}", path);
+
+                            return FileVisitResult.CONTINUE;
                         }
-                    };
-
-                    execute(path.toAbsolutePath().toString(), runnable);
-                    count++;
-                }
-
-                if (count > maxFileScan) {
-                    completedAllFiles = false;
-                    LOGGER.debug("Hit scan limit of {}", maxFileScan);
+                    });
                 }
             } catch (final IOException e) {
                 LOGGER.error(e.getMessage(), e);
@@ -160,7 +174,7 @@ public abstract class RepositoryProcessor {
             stopExecutor(false);
         }
 
-        return completedAllFiles;
+        return completedAllFiles.get();
     }
 
     private Runnable createJobProcessFeedFiles(final StroomZipRepository stroomZipRepository, final String feed,
