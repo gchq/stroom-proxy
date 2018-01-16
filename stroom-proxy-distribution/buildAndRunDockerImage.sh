@@ -36,4 +36,4 @@ echo "proxyArg2: $proxyArg2"
 docker build ${proxyArg1} ${proxyArg2} --tag=stroom-proxy:latest build/distributions/stroom-proxy
 
 # Run the image in store mode
-docker run -p 8080:8080 --name=stroom-proxy -e STROOM_PROXY_MODE="store" stroom-proxy
+docker run -p 9080:9080 --name=stroom-proxy -e STROOM_PROXY_MODE="store" stroom-proxy
