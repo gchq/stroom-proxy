@@ -26,7 +26,7 @@ dependencies {
 }
 
 task writeBuildProperties {
-    def propertyFile = file "${project.rootDir}/stroom-util/src/main/resources/META-INF/stroom-util-build.properties"
+    def propertyFile = file "${project.rootDir}/stroom-proxy-util/src/main/resources/META-INF/stroom-util-build.properties"
     def props = new Properties()
 
     props.setProperty("buildVersion", versions.stroom)
