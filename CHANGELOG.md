@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Deleted transient file stroom-proxy-util/src/main/resources/META-INF/stroom-util-build.properties
+
 * Change docker image to use openjdk:8u151-jre-alpine as a base
 
 ## [v5.1-beta.11] - 2018-01-16
