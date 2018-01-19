@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v5.1.0] - 2018-01-19
+
 * Deleted transient file stroom-proxy-util/src/main/resources/META-INF/stroom-util-build.properties
 
 * Change docker image to use openjdk:8u151-jre-alpine as a base
@@ -62,7 +64,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
-[Unreleased]: https://github.com/gchq/stroom/compare/v5.1-beta.11...HEAD
+[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.0...HEAD
+[v5.1.0]: https://github.com/gchq/stroom/compare/v5.1-beta.11...v5.1.0
 [v5.1-beta.11]: https://github.com/gchq/stroom/compare/v5.1-beta.10...v5.1-beta.11
 [v5.1-beta.10]: https://github.com/gchq/stroom/compare/v5.1-beta.9...v5.1-beta.10
 [v5.1-beta.9]: https://github.com/gchq/stroom/compare/v5.1-beta.8...v5.1-beta.9
