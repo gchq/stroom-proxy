@@ -1,3 +1,6 @@
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
 dependencies {
     compile 'aopalliance:aopalliance:1.0'
     compile 'org.aspectj:aspectjrt:1.8.9'
@@ -21,3 +24,15 @@ dependencies {
     compile 'org.springframework:spring-web:4.2.4.RELEASE'
     compile 'org.springframework:spring-webmvc:4.2.4.RELEASE'
 }
+
+task writeBuildProperties {
+    def propertyFile = file "${project.rootDir}/stroom-proxy-util/src/main/resources/META-INF/stroom-util-build.properties"
+    def props = new Properties()
+
+    props.setProperty("buildVersion", versions.stroom)
+    props.setProperty("buildDate", ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT))
+
+    props.store(propertyFile.newWriter(), null)
+}
+
+tasks.compileJava.dependsOn writeBuildProperties

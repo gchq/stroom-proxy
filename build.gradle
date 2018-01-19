@@ -10,6 +10,26 @@ allprojects {
     version = "${version}"
 }
 
+//if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
+//use that, else use a default value
+ext.getPropertyOrDefault = { propName, defaultValue ->
+    def val;
+    if (project.hasProperty(propName) && project.getProperty(propName) != "unspecified" && project.getProperty(propName) != "") {
+        val = project.getProperty(propName)
+        println "Using property [$propName] with value [$val]"
+    } else {
+        val = defaultValue
+        println "Property [$propName] has no value, using default value [$val]"
+    }
+    return val;
+}
+
+//version numbers for libs that share version numbers, e.g. dropwizard-*, or for github repo release versions
+ext.versions = [
+        //----------Stroom-----------------
+        stroom: getPropertyOrDefault('version', 'SNAPSHOT'),
+]
+
 subprojects {
     apply plugin: 'java'
     sourceCompatibility = 1.8
