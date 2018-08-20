@@ -14,7 +14,7 @@
 # limitations under the License.
 #**********************************************************************
 
-FROM openjdk:8-alpine
+FROM openjdk:8u151-jre-alpine
 
 # The mode to run stroom proxy in
 ENV STROOM_PROXY_MODE="store"

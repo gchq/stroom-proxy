@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v5.1.1] - 2018-08-20
+
+* Issue **#26** : Fix for PathCreator replace method.
+
+## [v5.1.0] - 2018-01-19
+
+* Deleted transient file stroom-proxy-util/src/main/resources/META-INF/stroom-util-build.properties
+
+* Change docker image to use openjdk:8u151-jre-alpine as a base
+
 ## [v5.1-beta.11] - 2018-01-16
 
 * Issue **#24** : Replaced instances of `Files.walk()` with `Files.walkFileTree()`. `Files.walk()` throws errors if any files are deleted or are not accessible during the walk operation. This is a major issue with the Java design for walking files using Java 8 streams. To avoid this issue `Files.walkFileTree()` has now been used in place of `Files.walk()`.
@@ -58,7 +68,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
-[Unreleased]: https://github.com/gchq/stroom/compare/v5.1-beta.11...HEAD
+[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.1...HEAD
+[v5.1.1]: https://github.com/gchq/stroom/compare/v5.1.0...v5.1.1
+[v5.1.0]: https://github.com/gchq/stroom/compare/v5.1-beta.11...v5.1.0
 [v5.1-beta.11]: https://github.com/gchq/stroom/compare/v5.1-beta.10...v5.1-beta.11
 [v5.1-beta.10]: https://github.com/gchq/stroom/compare/v5.1-beta.9...v5.1-beta.10
 [v5.1-beta.9]: https://github.com/gchq/stroom/compare/v5.1-beta.8...v5.1-beta.9

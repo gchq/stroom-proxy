@@ -3,5 +3,7 @@
 .DS_Store
 .gradle/
 */target/
+*/out/
 *.swp
 target
+stroom-proxy-util/src/main/resources/META-INF/stroom-util-build.properties
