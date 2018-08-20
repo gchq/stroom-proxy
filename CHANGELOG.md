@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Issue **#26** : Fix for PathCreator replace method.
+
 ## [v5.1.0] - 2018-01-19
 
 * Deleted transient file stroom-proxy-util/src/main/resources/META-INF/stroom-util-build.properties
