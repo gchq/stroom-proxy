@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v5.1.1] - 2018-08-20
+
 * Issue **#26** : Fix for PathCreator replace method.
 
 ## [v5.1.0] - 2018-01-19
@@ -66,7 +68,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
-[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.0...HEAD
+[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.1...HEAD
+[v5.1.1]: https://github.com/gchq/stroom/compare/v5.1.0...v5.1.1
 [v5.1.0]: https://github.com/gchq/stroom/compare/v5.1-beta.11...v5.1.0
 [v5.1-beta.11]: https://github.com/gchq/stroom/compare/v5.1-beta.10...v5.1-beta.11
 [v5.1-beta.10]: https://github.com/gchq/stroom/compare/v5.1-beta.9...v5.1-beta.10
