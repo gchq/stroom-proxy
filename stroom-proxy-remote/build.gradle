@@ -1,5 +1,6 @@
 dependencies {
     compile project(':stroom-proxy-util')
+    compile project(':stroom-proxy-remote-api')
 
     compile 'com.caucho:hessian:4.0.38'
 }

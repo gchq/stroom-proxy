@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Moved remote feed status API code into a separate module for shared use by the Stroom application to maintain binary compatibility.
+
 ## [v5.1.1] - 2018-08-20
 
 * Issue **#26** : Fix for PathCreator replace method.
