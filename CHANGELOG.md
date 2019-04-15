@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v5.1.2] - 2019-04-15
+
 * Added code to publish artefacts to bintray.
 
 * Moved remote feed status API code into a separate module for shared use by the Stroom application to maintain binary compatibility.
@@ -72,7 +74,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
-[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.1...HEAD
+[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.2...HEAD
+[v5.1.2]: https://github.com/gchq/stroom/compare/v5.1.1...v5.1.2
 [v5.1.1]: https://github.com/gchq/stroom/compare/v5.1.0...v5.1.1
 [v5.1.0]: https://github.com/gchq/stroom/compare/v5.1-beta.11...v5.1.0
 [v5.1-beta.11]: https://github.com/gchq/stroom/compare/v5.1-beta.10...v5.1-beta.11
