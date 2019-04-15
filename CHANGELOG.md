@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Added code to publish artefacts to bintray.
+
 * Moved remote feed status API code into a separate module for shared use by the Stroom application to maintain binary compatibility.
 
 ## [v5.1.1] - 2018-08-20

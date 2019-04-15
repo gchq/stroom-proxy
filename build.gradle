@@ -1,6 +1,26 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    }
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '3.5'
 }
+
+apply plugin: 'com.jfrog.bintray'
+
+//defines a list of gradle projects that we will publish with maven/bintray
+def projectsToBePublished = subprojects.findAll { project ->
+    project.path in [
+        ':stroom-proxy-remote-api'
+    ]
+}
+
 
 allprojects {
     apply plugin: 'maven'
@@ -82,5 +102,101 @@ subprojects {
     dependencies {
         testCompile 'junit:junit:4.12'
         testCompile 'org.mockito:mockito-all:1.10.19'
+    }
+}
+
+//configures only those projects in publishedProjectsPaths
+configure(projectsToBePublished) {
+
+    println "Configuring ${project.path} for publishing"
+
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
+
+    group = 'stroom'
+    version = versions.stroom
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
+    def pomConfig = {
+        licenses {
+            license {
+                name "The Apache Software License, Version 2.0"
+                url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution "repo"
+            }
+        }
+        scm {
+            url "https://github.com/stroom/stroom"
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifact sourcesJar
+                artifact javadocJar
+                pom.withXml {
+                    def root = asNode()
+                    root.appendNode('name', project.name)
+                    root.children().last() + pomConfig
+                }
+            }
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+
+    //configuration for the bintray plugin for uploading maven artefacts to bintray
+    //see https://github.com/bintray/gradle-bintray-plugin
+    //run task bintrayUpload to push the files, assuming BINTRAY_USER/KEY are set as env vars
+    bintray {
+        //Must never write these to log or system out
+        user = System.getenv('BINTRAY_USER') //set in Travis UI
+        key = System.getenv('BINTRAY_KEY') //set in Travis UI
+
+        //The maven plugin publications to push to bintray
+        publications = ['mavenJava']
+
+        //immediately make the artefacts public
+        publish = true
+
+        pkg {
+            repo = 'stroom-proxy'
+            name = 'stroom-proxy'
+            userOrg = 'stroom'
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/gchq/stroom-proxy.git'
+            version {
+                name = "${versions.stroom}"
+                desc = "stroom-proxy-${versions.stroom}"
+                released  = new Date()
+                vcsTag = "${versions.stroom}"
+                gpg {
+                    //Bintray will self-sign the files
+                    sign = true //Determines whether to GPG sign the files. The default is false
+                }
+            }
+        }
     }
 }
