@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.1.3] - 2021-04-27
+
 * Change Maven group ID to `uk.gov.gchq.stroom.proxy:`.
 
 * Change build to publish to Sonatype instead of Bintray.
@@ -76,7 +78,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
-[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.2...HEAD
+[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.3...HEAD
+[v5.1.3]: https://github.com/gchq/stroom/compare/v5.1.2...v5.1.3
 [v5.1.2]: https://github.com/gchq/stroom/compare/v5.1.1...v5.1.2
 [v5.1.1]: https://github.com/gchq/stroom/compare/v5.1.0...v5.1.1
 [v5.1.0]: https://github.com/gchq/stroom/compare/v5.1-beta.11...v5.1.0
