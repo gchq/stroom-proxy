@@ -1,3 +1,5 @@
+project.ext.pomDescription = "API for stroom-proxy to use on another proxy or stroom instance to check the feed status"
+
 dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile 'javax.servlet:servlet-api:2.5'

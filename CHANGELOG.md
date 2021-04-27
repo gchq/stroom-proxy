@@ -5,9 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-### Added
 
-### Changed
+* Change Maven group ID to `uk.gov.gchq.stroom.proxy:`.
+
+* Change build to publish to Sonatype instead of Bintray.
+
 
 ## [v5.1.2] - 2019-04-15
 
