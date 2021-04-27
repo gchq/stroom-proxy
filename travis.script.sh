@@ -25,8 +25,8 @@ if [ -n "$TRAVIS_TAG" ]; then
     EXTRA_BUILD_ARGS=(
       "signMavenJavaPublication"
       "publishToSonatype"
-      "closeSonatypeStagingRepository"
-      #"closeAndReleaseSonatypeStagingRepository"
+      #"closeSonatypeStagingRepository"
+      "closeAndReleaseSonatypeStagingRepository"
     )
 else
     #No tag so use the branch name as the version, e.g. master-SNAPSHOT
