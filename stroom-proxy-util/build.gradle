@@ -29,7 +29,7 @@ task writeBuildProperties {
     def propertyFile = file "${project.rootDir}/stroom-proxy-util/src/main/resources/META-INF/stroom-util-build.properties"
     def props = new Properties()
 
-    props.setProperty("buildVersion", versions.stroom)
+    props.setProperty("buildVersion", versions.stroomProxy)
     props.setProperty("buildDate", ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT))
 
     props.store(propertyFile.newWriter(), null)

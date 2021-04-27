@@ -63,13 +63,13 @@ ext.getPropertyOrDefault = { propName, defaultValue ->
 //version numbers for libs that share version numbers, e.g. dropwizard-*, or for github repo release versions
 ext.versions = [
     //----------Stroom-----------------
-    stroom: getPropertyOrDefault('version', 'SNAPSHOT').replaceFirst(/^v/, ""),
+    stroomProxy: getPropertyOrDefault('version', 'SNAPSHOT').replaceFirst(/^v/, ""),
 ]
 
-ext.isReleaseBuild = !versions.stroom.endsWith('SNAPSHOT')
+ext.isReleaseBuild = !versions.stroomProxy.endsWith('SNAPSHOT')
 
 if (isReleaseBuild) {
-    println "This is a release build for maven version [${versions.stroomQuery}]"
+    println "This is a release build for maven version [${versions.stroomProxy}]"
     // Ensure the various props are set for signing and publishing to sonatype
 
     // The username for Sonatype OSSRH Jira account
@@ -128,8 +128,8 @@ void configureSigning(Project project) {
 }
 
 allprojects {
-    group = 'uk.gov.gchq.stroom.query'
-    version = versions.stroomQuery
+    group = 'uk.gov.gchq.stroom.proxy'
+    version = versions.stroomProxy
 }
 
 subprojects {
@@ -215,7 +215,7 @@ configure(projectsToBePublished) { publishedProject ->
                     pom {
                         name = project['name']
                         description = publishedProject.ext.pomDescription 
-                        url = 'https://github.com/gchq/stroom-query'
+                        url = 'https://github.com/gchq/stroom-proxy'
                         licenses {
                             license {
                                 name = 'The Apache License, Version 2.0'
@@ -230,9 +230,9 @@ configure(projectsToBePublished) { publishedProject ->
                             }
                         }
                         scm {
-                            connection = 'scm:git:git@github.com:gchq/stroom-query.git'
-                            developerConnection = 'scm:git:git@github.com:gchq/stroom-query.git'
-                            url = 'https://github.com/gchq/stroom-query'
+                            connection = 'scm:git:git@github.com:gchq/stroom-proxy.git'
+                            developerConnection = 'scm:git:git@github.com:gchq/stroom-proxy.git'
+                            url = 'https://github.com/gchq/stroom-proxy'
                         }
                     }         
                 }
