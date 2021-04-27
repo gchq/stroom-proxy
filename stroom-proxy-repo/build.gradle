@@ -4,3 +4,11 @@ dependencies {
     compile 'commons-io:commons-io:2.5'
     compile 'org.slf4j:slf4j-api:1.6.1'
 }
+
+
+// For reasons long forgotten we release the jar and sources jar for this project
+// on github.
+java {
+    //package Sources as part of publication
+    withSourcesJar()
+}

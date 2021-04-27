@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.1.5] - 2021-04-27
+
+* Fix build issues.
+
+
 ## [v5.1.4] - 2021-04-27
 
 * Fix maven build issues.
@@ -83,7 +88,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
-[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.4...HEAD
+[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.5...HEAD
+[v5.1.5]: https://github.com/gchq/stroom/compare/v5.1.4...v5.1.5
 [v5.1.4]: https://github.com/gchq/stroom/compare/v5.1.3...v5.1.4
 [v5.1.3]: https://github.com/gchq/stroom/compare/v5.1.2...v5.1.3
 [v5.1.2]: https://github.com/gchq/stroom/compare/v5.1.1...v5.1.2
