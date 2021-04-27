@@ -4,6 +4,7 @@
 .gradle/
 */target/
 */out/
+*/build/
 *.swp
 target
 stroom-proxy-util/src/main/resources/META-INF/stroom-util-build.properties
