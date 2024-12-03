@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+
+## [v5.1.7] - 2024-12-03
+
 * Replace `log4j` 1.2.17 with `reload4j` to address vulnerabilities in `log4j` 1.x.
 
 * Uplift `slf4j` to 1.7.36.
@@ -98,7 +101,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [initialOpenSourceRelease] - 2016-10-31
 Intial open source release
 
-[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.6...HEAD
+[Unreleased]: https://github.com/gchq/stroom/compare/v5.1.7...HEAD
+[v5.1.7]: https://github.com/gchq/stroom/compare/v5.1.6...v5.1.7
 [v5.1.6]: https://github.com/gchq/stroom/compare/v5.1.5...v5.1.6
 [v5.1.5]: https://github.com/gchq/stroom/compare/v5.1.4...v5.1.5
 [v5.1.4]: https://github.com/gchq/stroom/compare/v5.1.3...v5.1.4
