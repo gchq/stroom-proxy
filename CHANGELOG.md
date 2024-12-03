@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Replace `log4j` 1.2.17 with `reload4j` to address vulnerabilities in `log4j` 1.x.
+
+* Uplift `slf4j` to 1.7.36.
+
+
 ## [v5.1.6] - 2021-04-27
 
 * Change build to release to central.

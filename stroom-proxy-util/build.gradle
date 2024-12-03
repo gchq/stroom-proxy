@@ -11,8 +11,11 @@ dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile 'commons-io:commons-io:2.5'
     compile 'javax.servlet:servlet-api:2.5'
-    compile 'log4j:log4j:1.2.17'
-    compile 'org.slf4j:slf4j-log4j12:1.6.1'
+    // This is the bridge from slf4j to reload4j (see below)
+    compile 'org.slf4j:slf4j-reload4j:1.7.36'
+    // This is a drop-in replacement for log4j 1.2.7. It is a fork without all the vulnerabilities
+    // See https://reload4j.qos.ch
+    compile 'ch.qos.reload4j:reload4j:1.2.19'
     compile 'net.sf.ehcache:ehcache-core:2.6.11'
     compile 'com.googlecode.ehcache-spring-annotations:ehcache-spring-annotations:1.2.0'
 
