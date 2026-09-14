@@ -1,3 +1,6 @@
+**This repository is deprecated. The Stroom-Proxy application is now part of the https://github.com/gchq/stroom repository.** 
+
+
 # Stroom Proxy
 
 _Stroom Proxy_ is typically used as a proxy for _Stroom_ allowing systems to forward events or bundles of events to _Stroom Proxy_ where they will be aggregated and forwarded on to _Stroom_. It has the following features:
